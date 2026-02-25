@@ -1,4 +1,22 @@
 export default function ProjectBlocks({ blocks = [] }) {
+  const renderText = (text) => {
+    if (Array.isArray(text)) {
+      return text
+        .filter(Boolean)
+        .map((paragraph, idx) => (
+          <p key={idx} className="project-block-paragraph">
+            {paragraph}
+          </p>
+        ));
+    }
+
+    if (typeof text === "string" && text.length > 0) {
+      return <p className="project-block-paragraph">{text}</p>;
+    }
+
+    return null;
+  };
+
   return (
     <div className="project-content">
       {blocks.map((b, i) => {
@@ -7,7 +25,7 @@ export default function ProjectBlocks({ blocks = [] }) {
             return (
               <section key={i} className="project-block project-block-text">
                 {b.title && <h3 className="project-block-title">{b.title}</h3>}
-                <p className="project-block-text">{b.text}</p>
+                {renderText(b.text)}
               </section>
             );
 
@@ -48,7 +66,7 @@ export default function ProjectBlocks({ blocks = [] }) {
               >
                 <div className="project-split-text">
                   {b.title && <h3 className="project-block-title">{b.title}</h3>}
-                  {b.text && <p className="project-block-text">{b.text}</p>}
+                  {renderText(b.text)}
                 </div>
 
                 <div className="project-split-media">

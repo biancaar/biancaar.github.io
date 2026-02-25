@@ -5,15 +5,16 @@ const Header = () => (
   <header className="site-menu">
     {/* LOGO -> torna alla home */}
     <Link to="/" className="logo">
-      ROTARU BIANCA <br />
-      <hr />
-      <span className="logo-role">d e v e l o p e r</span>
+      <img className="logo-mark" src="/LOGO.png" alt="Rotaru Bianca logo" />
+      <div className="logo-text">
+        
+      </div>
     </Link>
 
     <nav className="nav-links">
-      <a href="#about">About Me</a>
-      <a href="#projects">Projects</a>
-      <a href="#certifications">Certifications</a>
+      <Link to="/#about">About Me</Link>
+      <Link to="/#timeline">Timeline</Link>
+      <Link to="/#projects">Projects</Link>
     </nav>
 
     <div className="menu-right">

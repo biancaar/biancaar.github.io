@@ -3,18 +3,30 @@ import projects from "../data/projects";
 
 export default function ProjectNavigation({
   title = "Projects",
-  subtitle = "Seleziona un progetto"
+  subtitle = "Seleziona un progetto",
+  compact = false,
+  hideHeader = false,
+  className = ""
 }) {
   const { pathname } = useLocation();
   const currentId = Number(pathname.split("/").pop());
+  const navigationClass = [
+    "project-navigation",
+    compact ? "is-compact" : "",
+    className
+  ]
+    .filter(Boolean)
+    .join(" ");
 
   return (
-    <section className="project-navigation">
+    <section className={navigationClass}>
       <div className="project-navigation-inner">
-        <header className="project-navigation-header">
-          <h2>{title}</h2>
-          {/*<p>{/*subtitle}</p>*/}
-        </header>
+        {!hideHeader && (
+          <header className="project-navigation-header">
+            <h2>{title}</h2>
+            {subtitle ? <p>{subtitle}</p> : null}
+          </header>
+        )}
 
         <nav className="project-navigation-list">
           {projects.map((p, idx) => {
