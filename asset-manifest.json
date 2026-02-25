@@ -1,0 +1,39 @@
+{
+  "files": {
+    "main.css": "/static/css/main.91111c94.css",
+    "main.js": "/static/js/main.501a22f7.js",
+    "static/media/AudioOrgano.mov": "/static/media/AudioOrgano.ec749c531572adef1cfb.mov",
+    "static/media/RenderPieve2.png": "/static/media/RenderPieve2.91fb1c604dcf7bec0e02.png",
+    "static/media/RenderPieve1.png": "/static/media/RenderPieve1.f535c99afb609fb42a36.png",
+    "static/media/3DOptimization.mp4": "/static/media/3DOptimization.ac089499155dce2936e7.mp4",
+    "static/media/20241203_124918.png": "/static/media/20241203_124918.90947d94c8c92fea7c8a.png",
+    "static/media/Render2.png": "/static/media/Render2.d30991b2413c4af8c7ef.png",
+    "static/media/Formella.png": "/static/media/Formella.8348e1eeb74d0113f01b.png",
+    "static/media/project3.jpg": "/static/media/project3.8999efcac21d2ed4b6d2.jpg",
+    "static/media/project1.jpg": "/static/media/project1.63a1f14be73fbe14fe44.jpg",
+    "static/media/FormellaProgetto.png": "/static/media/FormellaProgetto.c309e067262508daaf47.png",
+    "static/media/FormellaVideo.mp4": "/static/media/FormellaVideo.8a0dce7eff1dfc7ac4c1.mp4",
+    "static/media/com.oculus.vrshell-20250313-090753.jpg": "/static/media/com.oculus.vrshell-20250313-090753.4717292cfb5573859608.jpg",
+    "static/media/project1_b.jpg": "/static/media/project1_b.eef7f540201bfc77f273.jpg",
+    "static/media/project2.jpg": "/static/media/project2.088676bae7b05d508d54.jpg",
+    "static/media/FormellaStampa.png": "/static/media/FormellaStampa.9596b8573aea5aa8a05d.png",
+    "static/media/Timeline2.jpg": "/static/media/Timeline2.6cdf23058b0b30a91fcb.jpg",
+    "static/media/Timeline1.jpg": "/static/media/Timeline1.974dcb4500dc88327637.jpg",
+    "static/media/one.png": "/static/media/one.52eb1dc05d96255c311c.png",
+    "static/media/luciunity.jpg": "/static/media/luciunity.a064df5319050e2c4e06.jpg",
+    "static/media/DueHD.jpg": "/static/media/DueHD.d180892ca9bedd10a565.jpg",
+    "static/media/ColumnHD.jpg": "/static/media/ColumnHD.150767f3df2f839663e4.jpg",
+    "static/media/AmboneIpotesi1.jpg": "/static/media/AmboneIpotesi1.850fde02bfd8220a9af2.jpg",
+    "static/media/handsVR.jpg": "/static/media/handsVR.846d836ac5d709a7d48d.jpg",
+    "static/media/amboneantico1.jpg": "/static/media/amboneantico1.700eeb65fe088da7dfdf.jpg",
+    "static/media/ColumnLD.jpg": "/static/media/ColumnLD.e8a54da79e10a11df601.jpg",
+    "static/media/bianca-rotaru-immagine-2025-08-20-124028.png": "/static/media/bianca-rotaru-immagine-2025-08-20-124028.d24589d6d0272728d0a7.png",
+    "index.html": "/index.html",
+    "main.91111c94.css.map": "/static/css/main.91111c94.css.map",
+    "main.501a22f7.js.map": "/static/js/main.501a22f7.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.91111c94.css",
+    "static/js/main.501a22f7.js"
+  ]
+}
