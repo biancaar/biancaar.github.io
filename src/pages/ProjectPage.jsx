@@ -1,17 +1,26 @@
 import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
-import projects from "../data/projects";
+import { getProjects } from "../data/projects";
 import ProjectNavigation from "../components/ProjectNavigation";
 import ProjectBlocks from "../components/ProjectBlocks";
 import backToTopIcon from "../assets/arrow_upward_50dp_000_FILL0_wght400_GRAD0_opsz48.png";
+import { useLanguage } from "../contexts/LanguageContext";
 
 const ProjectPage = () => {
+  const MOBILE_QUERY = "(orientation: portrait)";
+  const { language, t } = useLanguage();
+  const projects = getProjects(language);
   const { id } = useParams();
   const projectId = parseInt(id, 10);
   const project = projects.find((p) => p.id === projectId);
   const projectIndex = projects.findIndex((p) => p.id === projectId);
   const heroImage = project?.heroImage || project?.centerImage || project?.cover;
-  const heroScale = project?.heroScale ?? project?.centerScale ?? 1;
+  const isPortraitViewport =
+    typeof window !== "undefined" && window.matchMedia(MOBILE_QUERY).matches;
+  const baseHeroScale = project?.heroScale ?? project?.centerScale ?? 1;
+  const heroScale = isPortraitViewport
+    ? (project?.heroMobileScale ?? baseHeroScale)
+    : baseHeroScale;
   const heroHoverScale = heroScale * 1.06;
   const heroRef = useRef(null);
   const [showBackToTop, setShowBackToTop] = useState(false);
@@ -36,7 +45,7 @@ const ProjectPage = () => {
     const onScroll = () => {
       const st = window.scrollY;
       const heroEnd = getHeroEnd();
-      const isMobile = window.matchMedia("(max-width: 900px)").matches;
+      const isMobile = window.matchMedia(MOBILE_QUERY).matches;
 
       if (isMobile) {
         if (menu) {
@@ -74,7 +83,7 @@ const ProjectPage = () => {
     };
   }, [projectId]);
 
-  if (!project) return <div style={{ color: "#fff", padding: "5rem" }}>Project not found</div>;
+  if (!project) return <div style={{ color: "#fff", padding: "5rem" }}>{t("project.notFound")}</div>;
 
   return (
     <div className="project-page">
@@ -121,7 +130,7 @@ const ProjectPage = () => {
         type="button"
         className={`project-back-to-top ${showBackToTop ? "is-visible" : ""}`}
         onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-        aria-label="Back to top"
+        aria-label={t("project.backToTopAria")}
       >
         <img src={backToTopIcon} alt="" aria-hidden="true" />
       </button>

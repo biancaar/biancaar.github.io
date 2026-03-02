@@ -1,15 +1,20 @@
 import { Link, useLocation } from "react-router-dom";
-import projects from "../data/projects";
+import { getProjects } from "../data/projects";
+import { useLanguage } from "../contexts/LanguageContext";
 
 export default function ProjectNavigation({
-  title = "Projects",
-  subtitle = "Seleziona un progetto",
+  title,
+  subtitle,
   compact = false,
   hideHeader = false,
   className = ""
 }) {
+  const { language, t } = useLanguage();
   const { pathname } = useLocation();
+  const projects = getProjects(language);
   const currentId = Number(pathname.split("/").pop());
+  const sectionTitle = title ?? t("project.navigationTitle");
+  const sectionSubtitle = subtitle ?? t("project.navigationSubtitle");
   const navigationClass = [
     "project-navigation",
     compact ? "is-compact" : "",
@@ -23,8 +28,8 @@ export default function ProjectNavigation({
       <div className="project-navigation-inner">
         {!hideHeader && (
           <header className="project-navigation-header">
-            <h2>{title}</h2>
-            {subtitle ? <p>{subtitle}</p> : null}
+            <h2>{sectionTitle}</h2>
+            {sectionSubtitle ? <p>{sectionSubtitle}</p> : null}
           </header>
         )}
 

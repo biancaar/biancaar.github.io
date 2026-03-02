@@ -1,15 +1,16 @@
 import { useLayoutEffect } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import projects from "../data/projects";
-import timeline from "../data/timeline";
+import { getProjects } from "../data/projects";
+import { getTimeline } from "../data/timeline";
 import ThreeScrollScene from "../components/ThreeScrollScene";
 import { Link } from "react-router-dom";
+import { useLanguage } from "../contexts/LanguageContext";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const DESKTOP_QUERY = "(min-width: 901px)";
-const MOBILE_QUERY = "(max-width: 900px)";
+const DESKTOP_QUERY = "(orientation: landscape)";
+const MOBILE_QUERY = "(orientation: portrait)";
 
 // Collect media assets used to populate the project cards.
 const collectProjectMediaSources = (blocks = []) =>
@@ -48,6 +49,12 @@ const getProjectSlideMedia = (project) => {
 };
 
 export default function HomePage() {
+  const { language, t } = useLanguage();
+  const projects = getProjects(language);
+  const timeline = getTimeline(language);
+  const aboutParagraphs = t("home.about.paragraphs");
+  const contactParagraphs = t("home.contact.paragraphs");
+
   useLayoutEffect(() => {
     const mm = gsap.matchMedia();
 
@@ -115,7 +122,9 @@ export default function HomePage() {
         anticipatePin,
         refreshPriority,
         fastScrollEnd,
-        leadInFactor = 0
+        leadInFactor = 0,
+        enableTouchDrag = false,
+        touchDragFactor = 1.15
       }) => {
         const projectSection = document.querySelector(".panel-projects");
         const projectTrack = document.querySelector(".projects-track");
@@ -152,6 +161,71 @@ export default function HomePage() {
           scrollTrigger.fastScrollEnd = fastScrollEnd;
         }
 
+        const bindMobileTouchDrag = (tweenInstance) => {
+          let startX = 0;
+          let startY = 0;
+          let startScrollY = 0;
+          let trackingTouch = false;
+          let lockHorizontal = false;
+
+          const lockThreshold = 8;
+
+          const onTouchStart = (event) => {
+            if (event.touches.length !== 1) return;
+            const touch = event.touches[0];
+            startX = touch.clientX;
+            startY = touch.clientY;
+            startScrollY = window.scrollY || window.pageYOffset || 0;
+            trackingTouch = true;
+            lockHorizontal = false;
+          };
+
+          const onTouchMove = (event) => {
+            if (!trackingTouch || event.touches.length !== 1) return;
+
+            const touch = event.touches[0];
+            const deltaX = touch.clientX - startX;
+            const deltaY = touch.clientY - startY;
+
+            if (!lockHorizontal) {
+              const passedThreshold =
+                Math.abs(deltaX) > lockThreshold || Math.abs(deltaY) > lockThreshold;
+              if (!passedThreshold) return;
+              lockHorizontal = Math.abs(deltaX) > Math.abs(deltaY);
+            }
+
+            if (!lockHorizontal) return;
+
+            const trigger = tweenInstance?.scrollTrigger;
+            if (!trigger) return;
+
+            const currentScroll = window.scrollY || window.pageYOffset || 0;
+            if (currentScroll < trigger.start || currentScroll > trigger.end) return;
+
+            event.preventDefault();
+            const nextScroll = startScrollY - deltaX * touchDragFactor;
+            window.scrollTo(0, nextScroll);
+          };
+
+          const onTouchEnd = () => {
+            trackingTouch = false;
+            lockHorizontal = false;
+          };
+
+          projectSection.addEventListener("touchstart", onTouchStart, { passive: true });
+          projectSection.addEventListener("touchmove", onTouchMove, { passive: false });
+          projectSection.addEventListener("touchend", onTouchEnd);
+          projectSection.addEventListener("touchcancel", onTouchEnd);
+
+          return () => {
+            projectSection.removeEventListener("touchstart", onTouchStart);
+            projectSection.removeEventListener("touchmove", onTouchMove);
+            projectSection.removeEventListener("touchend", onTouchEnd);
+            projectSection.removeEventListener("touchcancel", onTouchEnd);
+          };
+        };
+
+        let tween;
         if (leadInFactor > 0) {
           const updateTrackPosition = (progress) => {
             const totalDistance = Math.max(getPinDistance(), 1);
@@ -165,18 +239,30 @@ export default function HomePage() {
           scrollTrigger.onUpdate = (self) => updateTrackPosition(self.progress);
           scrollTrigger.onRefresh = (self) => updateTrackPosition(self.progress);
 
-          return gsap.to({}, {
+          tween = gsap.to({}, {
             duration: 1,
+            ease: "none",
+            scrollTrigger
+          });
+        } else {
+          tween = gsap.to(projectTrack, {
+            x: () => -getScrollDistance(),
             ease: "none",
             scrollTrigger
           });
         }
 
-        return gsap.to(projectTrack, {
-          x: () => -getScrollDistance(),
-          ease: "none",
-          scrollTrigger
-        });
+        const unbindTouchDrag =
+          enableTouchDrag && window.matchMedia(MOBILE_QUERY).matches
+            ? bindMobileTouchDrag(tween)
+            : () => {};
+
+        return () => {
+          unbindTouchDrag();
+          tween?.scrollTrigger?.kill?.();
+          tween?.kill?.();
+        };
+
       };
 
       mm.add(DESKTOP_QUERY, () =>
@@ -196,7 +282,8 @@ export default function HomePage() {
           scrub: true,
           anticipatePin: 0,
           fastScrollEnd: true,
-          leadInFactor: 0.16
+          leadInFactor: 0.16,
+          enableTouchDrag: true
         })
       );
 
@@ -267,7 +354,7 @@ export default function HomePage() {
       mm.revert();
       ctx.revert();
     };
-  }, []);
+  }, [language]);
 
   return (
     <>
@@ -278,43 +365,38 @@ export default function HomePage() {
 
         <div className="hero-subtitle-container">
           <p className="hero-subtitle">
-            CREATIVE DEVELOPER<br />
-            3D & INTERACTIVE EXPERIENCES
+            {t("hero.subtitleLine1")}<br />
+            {t("hero.subtitleLine2")}
           </p>
         </div>
       </section>
 
       <section id="about" className="panel panel-skills">
         <div className="about-content">
-          <h2>About Me</h2>
-          <p>
-            La mia passione per la programmazione è nata a 14 anni, iniziando con il <strong>design web</strong> e la creazione di siti semplici. Ho poi approfondito <strong>SQL, JavaScript e PHP</strong>.
-          </p>
-          <br />
-          <p>
-            Durante gli anni scolastici ho imparato linguaggi come <strong>C++, C# e Java</strong>, sviluppando un <strong>metodo di problem solving</strong> e un approccio strutturato al ragionamento.
-          </p>
-          <br />
-          <p>
-            Invece durante l'ultima esperienza lavorativa ho avuto l'opportunità di esplorare il mondo del <strong>3D e della realtà virtuale</strong>, utilizzando strumenti come <strong>Unity, Blender e Substance Painter</strong>. Questa esperienza ha arricchito la mia prospettiva, permettendomi di unire competenze tecniche a una sensibilità estetica, con l'obiettivo di creare <strong>esperienze digitali coinvolgenti e innovative</strong>.
-          </p>
+          <h2>{t("home.about.title")}</h2>
+          {aboutParagraphs.map((paragraph, index) => (
+            <div key={`about-${index}`}>
+              <p>{paragraph}</p>
+              {index < aboutParagraphs.length - 1 ? <br /> : null}
+            </div>
+          ))}
           <br />
           <div className="skills-card">
-            <h3 className="skills-title">SKILLS</h3>
+            <h3 className="skills-title">{t("home.about.skillsTitle")}</h3>
 
             <div className="skills-grid">
               <div className="skill-col">
-                <div className="skill-head">WEB DEV</div>
+                <div className="skill-head">{t("home.about.skills.webDev")}</div>
                 <div className="skill-body">React, JS, CSS, PHP, SQL</div>
               </div>
 
               <div className="skill-col">
-                <div className="skill-head">3D &amp; VR DEV</div>
+                <div className="skill-head">{t("home.about.skills.vrDev")}</div>
                 <div className="skill-body">Unity, Blender, Substance Painter</div>
               </div>
 
               <div className="skill-col">
-                <div className="skill-head">SOFTWARE DEV</div>
+                <div className="skill-head">{t("home.about.skills.softwareDev")}</div>
                 <div className="skill-body">C++, C#, Java</div>
               </div>
             </div>
@@ -325,7 +407,7 @@ export default function HomePage() {
       <section id="timeline" className="panel panel-timeline">
         <div className="timeline-inner">
           <header className="timeline-header">
-            <h2>Esperienze e Formazione</h2>
+            <h2>{t("home.timeline.title")}</h2>
           </header>
 
           <div className="timeline-scroll">
@@ -356,7 +438,7 @@ export default function HomePage() {
         <div className="projects-edge-right" aria-hidden="true" />
 
         <div className="projects-heading">
-          <h2>Projects</h2>
+          <h2>{t("home.projects.title")}</h2>
         </div>
 
         <div className="projects-horizontal">
@@ -385,7 +467,7 @@ export default function HomePage() {
                         <h3>{project.title}</h3>
                         <p>{project.subtitle}</p>
                         <Link to={`/projects/${project.id}`} className="project-slide-cta">
-                          View Project
+                          {t("home.projects.viewProject")}
                         </Link>
                       </div>
 
@@ -450,7 +532,7 @@ export default function HomePage() {
                           to={`/projects/${project.id}`}
                           className="project-slide-mobile-cta"
                         >
-                          View Project
+                          {t("home.projects.viewProject")}
                         </Link>
                       </div>
                     </div>
@@ -465,20 +547,14 @@ export default function HomePage() {
 
       <section id="contact" className="panel panel-contact">
         <div className="contact-content">
-          <h2>Contact Me</h2>
+          <h2>{t("home.contact.title")}</h2>
+          {contactParagraphs.map((paragraph, index) => (
+            <p key={`contact-${index}`}>{paragraph}</p>
+          ))}
           <p>
-            Sono attualmente alla ricerca di nuove opportunità nel <strong>web development</strong>,
-            con particolare interesse per progetti che uniscano <strong>design, interazione e tecnologia</strong>.
-          </p>
-
-          <p>
-            Se pensi che il mio profilo possa essere adatto al tuo team o a un progetto,
-            sarò felice di parlarne.
-          </p>
-          <p>
-            <strong>Cellulare: +39 345 242 1558
+            <strong>{t("home.contact.phoneLabel")}: +39 345 242 1558
               <br />
-              E-mail: bianca.rotaru.a@gmail.com
+              {t("home.contact.emailLabel")}: bianca.rotaru.a@gmail.com
             </strong>
           </p>
         </div>
@@ -486,39 +562,39 @@ export default function HomePage() {
           <div className="contact-form-card">
             <form action="https://formspree.io/f/mnjjjqov" method="POST">
               <label>
-                Name
+                {t("home.contact.form.nameLabel")}
                 <input
                   name="name"
                   type="text"
-                  placeholder="Your name"
+                  placeholder={t("home.contact.form.namePlaceholder")}
                   autoComplete="name"
                   required
                 />
               </label>
 
               <label>
-                Email
+                {t("home.contact.form.emailLabel")}
                 <input
                   name="email"
                   type="email"
-                  placeholder="Your email"
+                  placeholder={t("home.contact.form.emailPlaceholder")}
                   autoComplete="email"
                   required
                 />
               </label>
 
               <label>
-                Message
+                {t("home.contact.form.messageLabel")}
                 <textarea
                   name="message"
-                  placeholder="Tell me about your project"
+                  placeholder={t("home.contact.form.messagePlaceholder")}
                   rows="4"
                   autoComplete="off"
                   required
                 />
               </label>
 
-              <button type="submit">Send Message</button>
+              <button type="submit">{t("home.contact.form.submit")}</button>
             </form>
           </div>
         </div>

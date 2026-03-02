@@ -37,7 +37,7 @@ import render3Center from "../assets/Render2.png";
 import columnHDPreview from "../assets/ColumnHD.jpg";
 import columnLDPreview from "../assets/ColumnLD.jpg";
 
-const projects = [
+const projectsIt = [
   {
     id: 1,
     title: "Immersive VR Tour",
@@ -143,6 +143,7 @@ const projects = [
     subtitle: "Formazione e progettazione orientata alla stampa 3D",
     cover: p2,
     heroScale: 1.0,
+    heroMobileScale: 1.35,
     centerImage: formellaCenter,
     centerScale: 2.0,
     previewVideo: formellaVideo,
@@ -235,5 +236,146 @@ const projects = [
     ]
   }
 ];
+
+const projectTranslations = {
+  en: {
+    1: {
+      subtitle: "Interactive virtual reality application",
+      previewTitle: "Fornovo Parish Church",
+      blocks: [
+        {
+          title: "Overview",
+          text:
+            "This project was created to build an immersive virtual reality experience designed to showcase the Fornovo area and guide users through informative and interactive content. The application was developed in Unity with a strong focus on VR optimization to ensure a smooth and engaging experience. The virtual tour allows users to explore reconstructed 3D environments, interact with informative elements, and discover the history and cultural heritage of Fornovo. The project required skills in 3D modeling, software development and user experience design, with special attention to accessibility and usability in VR."
+        },
+        {
+          caption: "Main VR environment view"
+        },
+        {
+          title: "Interior",
+          text:
+            "The interior was modeled carefully to recreate the authentic atmosphere of the site, with attention to lighting and architectural details. VR optimization required balancing visual quality and performance by implementing LOD and occlusion culling techniques to maintain fluid performance even on less powerful hardware such as Oculus Quest 2. Some historical architectural elements, including statues and reliefs, were scanned in 3D, optimized and integrated in the virtual environment, allowing users to get close and interact with them to discover detailed information about their history and meaning."
+        },
+        {
+          caption: "Interior lighting"
+        },
+        {
+          title: "Interaction",
+          text:
+            "Special care was dedicated to user experience, with attention to users of different ages and abilities. Interaction was designed to be intuitive and accessible, allowing exploration even without controllers thanks to hand and finger tracking. This creates a more natural and immersive experience, especially for less experienced users or users with motor limitations. Controller-free interaction lets users navigate the virtual tour by moving their hands, virtually touching or grabbing points of interest, and triggering informative content through natural gestures. This approach required integrating advanced tracking and gesture-recognition technologies."
+        },
+        {
+          caption: "Controller-free interaction"
+        },
+        {
+          title: "Historical Reconstruction",
+          text:
+            "To offer a unique experience, users can travel back in time and view different phases of the church according to the selected historical period. This was possible through 3D modeling based on historical data, archive photos and surveys, which made it possible to faithfully reconstruct the architectural evolution of the site. Users can explore the different historical phases and access informative content explaining the architectural and historical changes across centuries."
+        },
+        {
+          caption: "Historical timeline interaction"
+        },
+        {
+          title: "Technologies Used",
+          items: [
+            "Unity",
+            "XR Interaction Toolkit",
+            "Blender",
+            "Photogrammetry",
+            "Substance Painter",
+            "VR optimization"
+          ]
+        }
+      ]
+    },
+    2: {
+      title: "3D Printing Modeling",
+      subtitle: "Training and design focused on additive manufacturing",
+      previewTitle: "3D Plaque",
+      blocks: [
+        {
+          title: "Overview",
+          text:
+            "Teaching and design activity focused on 3D modeling for print production, with attention to tolerances, volumes and mesh optimization. The course was taught to students in the Environment and Territory program at Toschi school in Parma. The goal was to provide students with the skills to create 3D models by combining architecture and storytelling methods, producing a final output ready to be presented to the public."
+        },
+        {
+          caption: "Model preview in Blender"
+        },
+        {
+          caption: "Initial project concept"
+        },
+        {
+          caption: "Final result after 3D printing"
+        },
+        {
+          title: "Skills",
+          items: ["Blender", "Teaching", "3D Printing Workflow"]
+        }
+      ]
+    },
+    3: {
+      title: "3D Model Optimization",
+      subtitle: "Complexity reduction for real-time applications",
+      previewTitle: "PBR Texture Baking",
+      blocks: [
+        {
+          title: "Overview",
+          text:
+            "Personal project focused on high-definition modeling of a Corinthian column, created with a dense vertex count to preserve ornamental detail. Then, using Substance Painter, PBR materials were generated from the high-poly model to transfer details onto an optimized low-poly version. This workflow preserved visual quality while significantly improving performance, making the model suitable for real-time and web contexts. The images below show the same model: textures applied on a simple cylinder recreate the perception of depth and detail."
+        },
+        {
+          caption: "HD texture, LD mesh and modular model"
+        },
+        {
+          title: "Applied Techniques",
+          items: [
+            "High-poly modeling",
+            "Low-poly optimization",
+            "Baking and PBR texture workflow",
+            "Modular asset creation",
+            "Real-time and web optimization"
+          ]
+        }
+      ]
+    }
+  }
+};
+
+const mergeBlockTranslation = (block, translatedBlock) => {
+  if (!translatedBlock) return block;
+  return { ...block, ...translatedBlock };
+};
+
+const buildLocalizedProjects = (language) => {
+  if (language === "it") return projectsIt;
+
+  const source = projectTranslations[language];
+  if (!source) return projectsIt;
+
+  return projectsIt.map((project) => {
+    const translated = source[project.id];
+    if (!translated) return project;
+
+    const localizedBlocks = project.blocks.map((block, index) =>
+      mergeBlockTranslation(block, translated.blocks?.[index])
+    );
+
+    return {
+      ...project,
+      ...translated,
+      blocks: localizedBlocks
+    };
+  });
+};
+
+const projectsByLanguage = {
+  it: projectsIt,
+  en: buildLocalizedProjects("en")
+};
+
+export const getProjects = (language = "it") =>
+  projectsByLanguage[language] || projectsByLanguage.it;
+
+const projects = projectsByLanguage.it;
 
 export default projects;

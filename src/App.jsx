@@ -4,18 +4,21 @@ import Header from "./components/Header";
 import Footer from "./components/Footer";
 import HomePage from "./pages/HomePage";
 import ProjectPage from "./pages/ProjectPage";
+import { LanguageProvider } from "./contexts/LanguageContext";
 
 const App = () => (
-  <Router>
-    <ScrollToHash />
+  <LanguageProvider>
+    <Router>
+      <ScrollToHash />
 
-    <Header />
-    <Routes>
-      <Route path="/" element={<HomePage />} />
-      <Route path="/projects/:id" element={<ProjectPage />} />
-    </Routes>
-    <Footer />
-  </Router>
+      <Header />
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/projects/:id" element={<ProjectPage />} />
+      </Routes>
+      <Footer />
+    </Router>
+  </LanguageProvider>
 );
 
 export default App;

@@ -1,20 +1,24 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import mobileMenuIcon from "../assets/menu_40dp_FFFFFF_FILL0_wght400_GRAD0_opsz40 (1).png";
 import mobileMenuCloseIcon from "../assets/close_40dp_FFFFFF_FILL0_wght400_GRAD0_opsz40.png";
-
-const navItems = [
-  { to: "/#about", label: "About Me" },
-  { to: "/#timeline", label: "Timeline" },
-  { to: "/#projects", label: "Projects" }
-];
+import { useLanguage } from "../contexts/LanguageContext";
 
 const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isLangOpen, setIsLangOpen] = useState(false);
+  const selectorRef = useRef(null);
+  const { language, setLanguage, t } = useLanguage();
   const location = useLocation();
+  const navItems = [
+    { to: "/#about", label: t("nav.about") },
+    { to: "/#timeline", label: t("nav.timeline") },
+    { to: "/#projects", label: t("nav.projects") }
+  ];
 
   useEffect(() => {
     setIsMobileMenuOpen(false);
+    setIsLangOpen(false);
   }, [location.pathname, location.hash]);
 
   useEffect(() => {
@@ -28,6 +32,21 @@ const Header = () => {
       document.body.style.overflow = "";
     };
   }, [isMobileMenuOpen]);
+
+  useEffect(() => {
+    const onPointerDown = (event) => {
+      if (!selectorRef.current?.contains(event.target)) {
+        setIsLangOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", onPointerDown);
+    document.addEventListener("touchstart", onPointerDown);
+    return () => {
+      document.removeEventListener("mousedown", onPointerDown);
+      document.removeEventListener("touchstart", onPointerDown);
+    };
+  }, []);
 
   return (
     <>
@@ -46,15 +65,49 @@ const Header = () => {
         </nav>
 
         <div className="menu-right">
-          <div className="language-selector">
-            <button className="lang-btn">IT v</button>
-            <ul className="lang-dropdown">
-              <li data-lang="it">IT</li>
-              <li data-lang="en">EN</li>
+          <div ref={selectorRef} className="language-selector">
+            <button
+              type="button"
+              className="lang-btn"
+              onClick={() => setIsLangOpen((prev) => !prev)}
+              aria-haspopup="menu"
+              aria-expanded={isLangOpen}
+            >
+              {language.toUpperCase()} v
+            </button>
+            <ul className={`lang-dropdown ${isLangOpen ? "is-open" : ""}`} role="menu">
+              <li role="none">
+                <button
+                  type="button"
+                  role="menuitemradio"
+                  aria-checked={language === "it"}
+                  className={language === "it" ? "is-active" : ""}
+                  onClick={() => {
+                    setLanguage("it");
+                    setIsLangOpen(false);
+                  }}
+                >
+                  IT
+                </button>
+              </li>
+              <li role="none">
+                <button
+                  type="button"
+                  role="menuitemradio"
+                  aria-checked={language === "en"}
+                  className={language === "en" ? "is-active" : ""}
+                  onClick={() => {
+                    setLanguage("en");
+                    setIsLangOpen(false);
+                  }}
+                >
+                  EN
+                </button>
+              </li>
             </ul>
           </div>
 
-          <a href="#contact" className="contact-btn">Contact Me</a>
+          <a href="#contact" className="contact-btn">{t("nav.contact")}</a>
         </div>
 
         <button
@@ -79,8 +132,24 @@ const Header = () => {
             </Link>
           ))}
           <a href="/#contact" onClick={() => setIsMobileMenuOpen(false)}>
-            Contact Me
+            {t("nav.contact")}
           </a>
+          <div className="mobile-menu-language" role="group" aria-label="Language">
+            <button
+              type="button"
+              className={language === "it" ? "is-active" : ""}
+              onClick={() => setLanguage("it")}
+            >
+              IT
+            </button>
+            <button
+              type="button"
+              className={language === "en" ? "is-active" : ""}
+              onClick={() => setLanguage("en")}
+            >
+              EN
+            </button>
+          </div>
         </nav>
       </div>
     </>
