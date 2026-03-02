@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/static/css/main.16ede169.css",
-    "main.js": "/static/js/main.e9a80c79.js",
+    "main.css": "/static/css/main.f8756cec.css",
+    "main.js": "/static/js/main.454499fc.js",
     "static/media/AudioOrgano.mov": "/static/media/AudioOrgano.ec749c531572adef1cfb.mov",
     "static/media/RenderPieve2.png": "/static/media/RenderPieve2.91fb1c604dcf7bec0e02.png",
     "static/media/RenderPieve1.png": "/static/media/RenderPieve1.f535c99afb609fb42a36.png",
@@ -29,11 +29,11 @@
     "static/media/ColumnLD.jpg": "/static/media/ColumnLD.e8a54da79e10a11df601.jpg",
     "static/media/bianca-rotaru-immagine-2025-08-20-124028.png": "/static/media/bianca-rotaru-immagine-2025-08-20-124028.d24589d6d0272728d0a7.png",
     "index.html": "/index.html",
-    "main.16ede169.css.map": "/static/css/main.16ede169.css.map",
-    "main.e9a80c79.js.map": "/static/js/main.e9a80c79.js.map"
+    "main.f8756cec.css.map": "/static/css/main.f8756cec.css.map",
+    "main.454499fc.js.map": "/static/js/main.454499fc.js.map"
   },
   "entrypoints": [
-    "static/css/main.16ede169.css",
-    "static/js/main.e9a80c79.js"
+    "static/css/main.f8756cec.css",
+    "static/js/main.454499fc.js"
   ]
 }
