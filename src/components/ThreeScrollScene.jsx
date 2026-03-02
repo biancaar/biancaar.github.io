@@ -219,11 +219,13 @@ export default function ThreeScrollScene() {
         const frameDown = loaded.sizeScaled.y * -0.04;
         const startYOffset = -0.02;
         const lookAtYOffset = 0.03;
+        const isMobileViewport = window.matchMedia("(max-width: 900px)").matches;
+        const heroDepthFactor = isMobileViewport ? 0.36 : 0.28;
 
         camera.position.set(
           loaded.centerScaled.x + loaded.sizeScaled.x * 0.12,
           capitalY - frameDown + startYOffset * loaded.sizeScaled.y,
-          loaded.centerScaled.z + cameraDistance * 0.28
+          loaded.centerScaled.z + cameraDistance * heroDepthFactor
         );
 
         camera.lookAt(

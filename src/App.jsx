@@ -1,4 +1,3 @@
-import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import ScrollToHash from "./components/ScrollToHash";
 import Header from "./components/Header";
@@ -8,7 +7,7 @@ import ProjectPage from "./pages/ProjectPage";
 
 const App = () => (
   <Router>
-    <ScrollToHash /> {/* <-- fondamentale: deve stare dentro il Router */}
+    <ScrollToHash />
 
     <Header />
     <Routes>

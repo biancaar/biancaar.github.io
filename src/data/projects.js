@@ -85,7 +85,7 @@ const projects = [
         type: "text",
         title: "Interazione",
         text:
-          "Particolare cura e' stata dedicata all'esperienzza dell'utente, con riguardo per utenti di eta' e abilita' diverse. L'interazione e' stata progettata per essere intuitiva e accessibile, permettendo agli utenti di esplorare anche senza l'utilizzo di controller, grazie a un sistema di riconoscimento delle mani e della posizione delle dita. Permettendo dunque un'esperienza piu' naturale e immersiva, soprattutto per utenti meno esperti o con limitazioni motorie. L'interazione senza controller consente agli utenti di navigare attraverso il tour virtuale semplicemente muovendo le mani, toccando o afferrando virtualmente gli oggetti di interesse, e attivando contenuti informativi con gesti naturali. Questo approccio ha richiesto l'integrazione di tecnologie avanzate di tracking e riconoscimento dei gesti."
+          "Particolare cura e' stata dedicata all'esperienza dell'utente, con riguardo per utenti di eta' e abilita' diverse. L'interazione e' stata progettata per essere intuitiva e accessibile, permettendo agli utenti di esplorare anche senza l'utilizzo di controller, grazie a un sistema di riconoscimento delle mani e della posizione delle dita. Permettendo dunque un'esperienza piu' naturale e immersiva, soprattutto per utenti meno esperti o con limitazioni motorie. L'interazione senza controller consente agli utenti di navigare attraverso il tour virtuale semplicemente muovendo le mani, toccando o afferrando virtualmente gli oggetti di interesse, e attivando contenuti informativi con gesti naturali. Questo approccio ha richiesto l'integrazione di tecnologie avanzate di tracking e riconoscimento dei gesti."
       },
 
       {

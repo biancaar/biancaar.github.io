@@ -1,4 +1,3 @@
-import React from "react";
 import { Link } from "react-router-dom";
 
 const Footer = () => (
@@ -6,7 +5,7 @@ const Footer = () => (
     <div className="footer-inner">
       <div className="footer-left">
         <strong className="footer-name">Bianca Rotaru</strong>
-        <span className="footer-role">Creative Developer · Web & 3D</span>
+        <span className="footer-role">Creative Developer - Web & 3D</span>
       </div>
 
       <nav className="footer-nav">
@@ -26,7 +25,7 @@ const Footer = () => (
     </div>
 
     <div className="footer-bottom">
-      © 2026 — All rights reserved
+      (c) 2026 - All rights reserved
     </div>
   </footer>
 );

@@ -8,12 +8,50 @@ import { Link } from "react-router-dom";
 
 gsap.registerPlugin(ScrollTrigger);
 
+const DESKTOP_QUERY = "(min-width: 901px)";
+const MOBILE_QUERY = "(max-width: 900px)";
+
+// Collect media assets used to populate the project cards.
+const collectProjectMediaSources = (blocks = []) =>
+  blocks.flatMap((block) => {
+    if (block.type === "image" && block.src) return [block.src];
+    if (block.type === "gallery" && block.images?.length) {
+      return block.images.map((img) => img.src).filter(Boolean);
+    }
+    if (block.type === "split" && block.media?.src) return [block.media.src];
+    return [];
+  });
+
+const getProjectSlideMedia = (project) => {
+  const mediaSources = collectProjectMediaSources(project.blocks);
+  const centerImage = project.centerImage || project.cover;
+  const previewVideo = project.previewVideo || "";
+  const previewTitle = project.previewTitle || project.title;
+  const miniThumbA =
+    project.previewImageA || mediaSources[1] || mediaSources[0] || project.cover;
+  const miniThumbB =
+    project.previewImageB || mediaSources[2] || mediaSources[1] || project.cover;
+  const centerScale = project.centerScale ?? 1;
+  const centerHoverScale = centerScale * 1.06;
+  const previewVideoScale = project.previewVideoScale ?? 1;
+
+  return {
+    centerImage,
+    previewVideo,
+    previewTitle,
+    miniThumbA,
+    miniThumbB,
+    centerScale,
+    centerHoverScale,
+    previewVideoScale
+  };
+};
+
 export default function HomePage() {
   useLayoutEffect(() => {
     const mm = gsap.matchMedia();
 
     const ctx = gsap.context(() => {
-      // HERO parallax (muovili insieme, elegante, niente sovrapposizioni strane)
       gsap.to([".hero-title", ".hero-subtitle-container"], {
         y: 30,
         ease: "none",
@@ -26,7 +64,6 @@ export default function HomePage() {
         }
       });
 
-      // Skills card entry
       gsap.from(".skills-card", {
         y: 40,
         opacity: 0,
@@ -40,7 +77,7 @@ export default function HomePage() {
         }
       });
 
-      mm.add("(min-width: 901px)", () => {
+      mm.add(DESKTOP_QUERY, () => {
         const timelineSection = document.querySelector(".panel-timeline");
         const timelineList = document.querySelector(".timeline-list");
         const timelineScroll = document.querySelector(".timeline-scroll");
@@ -70,9 +107,16 @@ export default function HomePage() {
         });
       });
 
-      // Horizontal projects slideshow driven by vertical scroll.
-      // Must be created after timeline pin because timeline is above projects in DOM.
-      mm.add("(min-width: 901px)", () => {
+      // Shared horizontal projects animation used by desktop and mobile configs.
+      const createProjectsHorizontalTween = ({
+        pinExtraFactor,
+        minPinDistance,
+        scrub,
+        anticipatePin,
+        refreshPriority,
+        fastScrollEnd,
+        leadInFactor = 0
+      }) => {
         const projectSection = document.querySelector(".panel-projects");
         const projectTrack = document.querySelector(".projects-track");
 
@@ -80,26 +124,81 @@ export default function HomePage() {
 
         const getScrollDistance = () =>
           Math.max(projectTrack.scrollWidth - window.innerWidth, 0);
-        const getPinDistance = () =>
-          Math.max(getScrollDistance() + window.innerHeight * 0.22, window.innerWidth * 0.9);
+        const getBasePinDistance = () =>
+          Math.max(
+            getScrollDistance() + window.innerHeight * pinExtraFactor,
+            minPinDistance()
+          );
+        const getLeadInDistance = () => window.innerHeight * Math.max(leadInFactor, 0);
+        const getPinDistance = () => getBasePinDistance() + getLeadInDistance();
 
         gsap.set(projectTrack, { x: 0 });
+
+        const scrollTrigger = {
+          trigger: projectSection,
+          start: "top top",
+          end: () => `+=${getPinDistance()}`,
+          scrub,
+          pin: true,
+          anticipatePin,
+          invalidateOnRefresh: true
+        };
+
+        if (typeof refreshPriority === "number") {
+          scrollTrigger.refreshPriority = refreshPriority;
+        }
+
+        if (typeof fastScrollEnd === "boolean") {
+          scrollTrigger.fastScrollEnd = fastScrollEnd;
+        }
+
+        if (leadInFactor > 0) {
+          const updateTrackPosition = (progress) => {
+            const totalDistance = Math.max(getPinDistance(), 1);
+            const leadInProgress = Math.min(getLeadInDistance() / totalDistance, 0.9);
+            const normalizedProgress =
+              (progress - leadInProgress) / Math.max(1 - leadInProgress, 0.0001);
+            const clampedProgress = Math.min(Math.max(normalizedProgress, 0), 1);
+            gsap.set(projectTrack, { x: -getScrollDistance() * clampedProgress });
+          };
+
+          scrollTrigger.onUpdate = (self) => updateTrackPosition(self.progress);
+          scrollTrigger.onRefresh = (self) => updateTrackPosition(self.progress);
+
+          return gsap.to({}, {
+            duration: 1,
+            ease: "none",
+            scrollTrigger
+          });
+        }
 
         return gsap.to(projectTrack, {
           x: () => -getScrollDistance(),
           ease: "none",
-          scrollTrigger: {
-            trigger: projectSection,
-            start: "top top",
-            end: () => `+=${getPinDistance()}`,
-            scrub: 1,
-            pin: true,
-            anticipatePin: 1,
-            refreshPriority: 1,
-            invalidateOnRefresh: true
-          }
+          scrollTrigger
         });
-      });
+      };
+
+      mm.add(DESKTOP_QUERY, () =>
+        createProjectsHorizontalTween({
+          pinExtraFactor: 0.22,
+          minPinDistance: () => window.innerWidth * 0.9,
+          scrub: 1,
+          anticipatePin: 1,
+          refreshPriority: 1
+        })
+      );
+
+      mm.add(MOBILE_QUERY, () =>
+        createProjectsHorizontalTween({
+          pinExtraFactor: 0.25,
+          minPinDistance: () => window.innerHeight * 0.95,
+          scrub: true,
+          anticipatePin: 0,
+          fastScrollEnd: true,
+          leadInFactor: 0.16
+        })
+      );
 
       gsap.from(".project-slide-card", {
         opacity: 0,
@@ -129,13 +228,20 @@ export default function HomePage() {
         }
       });
 
-      // Menu hide/show on scroll (come prima)
       let last = window.scrollY;
       const menu = document.querySelector(".site-menu");
 
       const onScroll = () => {
         const st = window.scrollY;
         if (!menu) return;
+        const isMobile = window.matchMedia(MOBILE_QUERY).matches;
+
+        if (isMobile) {
+          menu.style.transform = "translateY(0)";
+          menu.style.opacity = "1";
+          last = st <= 0 ? 0 : st;
+          return;
+        }
 
         if (st > last && st > 100) {
           menu.style.transform = "translateY(-120%)";
@@ -148,15 +254,10 @@ export default function HomePage() {
       };
 
       window.addEventListener("scroll", onScroll);
-
-      // cleanup listener quando smonti pagina
       return () => window.removeEventListener("scroll", onScroll);
     });
 
-    // IMPORTANTISSIMO: refresh dopo mount + immagini
     const t = setTimeout(() => ScrollTrigger.refresh(), 150);
-
-    // refresh anche quando tutte le risorse sono caricate
     const onLoad = () => ScrollTrigger.refresh();
     window.addEventListener("load", onLoad);
 
@@ -172,7 +273,6 @@ export default function HomePage() {
     <>
       <ThreeScrollScene />
 
-      {/* HERO */}
       <section className="panel hero">
         <h1 className="hero-title">ROTARU BIANCA</h1>
 
@@ -184,7 +284,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ABOUT + SKILLS */}
       <section id="about" className="panel panel-skills">
         <div className="about-content">
           <h2>About Me</h2>
@@ -196,7 +295,7 @@ export default function HomePage() {
             Durante gli anni scolastici ho imparato linguaggi come <strong>C++, C# e Java</strong>, sviluppando un <strong>metodo di problem solving</strong> e un approccio strutturato al ragionamento.
           </p>
           <br />
-           <p>
+          <p>
             Invece durante l'ultima esperienza lavorativa ho avuto l'opportunità di esplorare il mondo del <strong>3D e della realtà virtuale</strong>, utilizzando strumenti come <strong>Unity, Blender e Substance Painter</strong>. Questa esperienza ha arricchito la mia prospettiva, permettendomi di unire competenze tecniche a una sensibilità estetica, con l'obiettivo di creare <strong>esperienze digitali coinvolgenti e innovative</strong>.
           </p>
           <br />
@@ -221,11 +320,8 @@ export default function HomePage() {
             </div>
           </div>
         </div>
-
-
       </section>
 
-      {/* TIMELINE */}
       <section id="timeline" className="panel panel-timeline">
         <div className="timeline-inner">
           <header className="timeline-header">
@@ -255,7 +351,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* PROJECTS */}
       <section id="projects" className="panel panel-projects">
         <div className="projects-background" aria-hidden="true" />
         <div className="projects-edge-right" aria-hidden="true" />
@@ -266,96 +361,97 @@ export default function HomePage() {
 
         <div className="projects-horizontal">
           <div className="projects-track">
-            {projects.map((p, idx) => {
-              const mediaSources = (p.blocks || []).flatMap((block) => {
-                if (block.type === "image" && block.src) return [block.src];
-                if (block.type === "gallery" && block.images?.length) {
-                  return block.images.map((img) => img.src).filter(Boolean);
-                }
-                if (block.type === "split" && block.media?.src) {
-                  return [block.media.src];
-                }
-                return [];
-              });
-
-              const centerImage = p.centerImage || p.cover;
-              const previewVideo = p.previewVideo || "";
-              const previewTitle = p.previewTitle || p.title;
-              const miniThumbA = p.previewImageA || mediaSources[1] || mediaSources[0] || p.cover;
-              const miniThumbB = p.previewImageB || mediaSources[2] || mediaSources[1] || p.cover;
-              const centerScale = p.centerScale ?? 1;
-              const centerHoverScale = centerScale * 1.06;
-              const previewVideoScale = p.previewVideoScale ?? 1;
+            {projects.map((project, idx) => {
+              const {
+                centerImage,
+                previewVideo,
+                previewTitle,
+                miniThumbA,
+                miniThumbB,
+                centerScale,
+                centerHoverScale,
+                previewVideoScale
+              } = getProjectSlideMedia(project);
 
               return (
-                <article key={p.id} className="project-slide">
-                  <div className="project-slide-card">
-                    <div className="project-slide-left">
-                      <span className="project-slide-index">
-                        {String(idx + 1).padStart(2, "0")}
-                      </span>
-                      <h3>{p.title}</h3>
-                      <p>{p.subtitle}</p>
-                      <Link to={`/projects/${p.id}`} className="project-slide-cta">
-                        View Project
-                      </Link>
-                    </div>
+                <article key={project.id} className="project-slide">
+                  <div className="project-slide-shell">
+                    <h3 className="project-slide-mobile-title">{project.title}</h3>
+                    <div className="project-slide-card">
+                      <div className="project-slide-left">
+                        <span className="project-slide-index">
+                          {String(idx + 1).padStart(2, "0")}
+                        </span>
+                        <h3>{project.title}</h3>
+                        <p>{project.subtitle}</p>
+                        <Link to={`/projects/${project.id}`} className="project-slide-cta">
+                          View Project
+                        </Link>
+                      </div>
 
-                    <Link
-                      to={`/projects/${p.id}`}
-                      className="project-slide-cutout"
-                      aria-label={`Open ${p.title}`}
-                      style={{
-                        "--center-scale": centerScale,
-                        "--center-hover-scale": centerHoverScale
-                      }}
-                    >
-                      <div
-                        className="project-slide-cutout-image"
-                        style={{ backgroundImage: `url(${centerImage})` }}
-                      />
-                    </Link>
-
-                    <div className="project-slide-right">
                       <Link
-                        to={`/projects/${p.id}`}
-                        className="project-video-thumb"
-                        aria-label={`Open ${p.title} preview`}
+                        to={`/projects/${project.id}`}
+                        className="project-slide-cutout"
+                        aria-label={`Open ${project.title}`}
+                        style={{
+                          "--center-scale": centerScale,
+                          "--center-hover-scale": centerHoverScale
+                        }}
                       >
-                        {previewVideo ? (
-                          <video
-                            className="project-video-thumb-video"
-                            src={previewVideo}
-                            autoPlay
-                            muted
-                            loop
-                            playsInline
-                            preload="metadata"
-                            style={{ "--preview-video-scale": previewVideoScale }}
-                          />
-                        ) : (
-                          <div
-                            className="project-video-thumb-video"
-                            style={{
-                              backgroundImage: `url(${miniThumbA})`,
-                              backgroundSize: "cover",
-                              backgroundPosition: "center"
-                            }}
-                          />
-                        )}
+                        <div
+                          className="project-slide-cutout-image"
+                          style={{ backgroundImage: `url(${centerImage})` }}
+                        />
                       </Link>
 
-                      <div className="project-video-title">{previewTitle}</div>
+                      <div className="project-slide-right">
+                        <Link
+                          to={`/projects/${project.id}`}
+                          className="project-video-thumb"
+                          aria-label={`Open ${project.title} preview`}
+                        >
+                          {previewVideo ? (
+                            <video
+                              className="project-video-thumb-video"
+                              src={previewVideo}
+                              autoPlay
+                              muted
+                              loop
+                              playsInline
+                              preload="metadata"
+                              style={{ "--preview-video-scale": previewVideoScale }}
+                            />
+                          ) : (
+                            <div
+                              className="project-video-thumb-video"
+                              style={{
+                                backgroundImage: `url(${miniThumbA})`,
+                                backgroundSize: "cover",
+                                backgroundPosition: "center"
+                              }}
+                            />
+                          )}
+                        </Link>
 
-                      <div className="project-mini-grid">
-                        <div
-                          className="project-mini-thumb"
-                          style={{ backgroundImage: `url(${miniThumbA})` }}
-                        />
-                        <div
-                          className="project-mini-thumb"
-                          style={{ backgroundImage: `url(${miniThumbB})` }}
-                        />
+                        <div className="project-video-title">{previewTitle}</div>
+
+                        <div className="project-mini-grid">
+                          <div
+                            className="project-mini-thumb"
+                            style={{ backgroundImage: `url(${miniThumbA})` }}
+                          />
+                          <div
+                            className="project-mini-thumb"
+                            style={{ backgroundImage: `url(${miniThumbB})` }}
+                          />
+                        </div>
+
+                        <Link
+                          to={`/projects/${project.id}`}
+                          className="project-slide-mobile-cta"
+                        >
+                          View Project
+                        </Link>
                       </div>
                     </div>
                   </div>
@@ -367,7 +463,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* CONTACT */}
       <section id="contact" className="panel panel-contact">
         <div className="contact-content">
           <h2>Contact Me</h2>
@@ -387,27 +482,46 @@ export default function HomePage() {
             </strong>
           </p>
         </div>
-          <div className="contact-right">
-        <div className="contact-form-card">
-          <form action="https://formspree.io/f/mnjjjqov" method="POST">
-            <label>
-              Name
-              <input name="name" type="text" placeholder="Your name" required />
-            </label>
+        <div className="contact-right">
+          <div className="contact-form-card">
+            <form action="https://formspree.io/f/mnjjjqov" method="POST">
+              <label>
+                Name
+                <input
+                  name="name"
+                  type="text"
+                  placeholder="Your name"
+                  autoComplete="name"
+                  required
+                />
+              </label>
 
-            <label>
-              Email
-              <input name="email" type="email" placeholder="Your email" required />
-            </label>
+              <label>
+                Email
+                <input
+                  name="email"
+                  type="email"
+                  placeholder="Your email"
+                  autoComplete="email"
+                  required
+                />
+              </label>
 
-            <label>
-              Message
-              <textarea name="message" placeholder="Tell me about your project" rows="4" required />
-            </label>
+              <label>
+                Message
+                <textarea
+                  name="message"
+                  placeholder="Tell me about your project"
+                  rows="4"
+                  autoComplete="off"
+                  required
+                />
+              </label>
 
-            <button type="submit">Send Message</button>
-          </form>
-        </div></div>
+              <button type="submit">Send Message</button>
+            </form>
+          </div>
+        </div>
       </section>
     </>
   );

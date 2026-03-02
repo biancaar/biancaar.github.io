@@ -1,4 +1,3 @@
-import React from "react";
 import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import projects from "../data/projects";
@@ -37,6 +36,18 @@ const ProjectPage = () => {
     const onScroll = () => {
       const st = window.scrollY;
       const heroEnd = getHeroEnd();
+      const isMobile = window.matchMedia("(max-width: 900px)").matches;
+
+      if (isMobile) {
+        if (menu) {
+          menu.style.transform = "translateY(0)";
+          menu.style.opacity = "1";
+        }
+        setShowBackToTop(st >= heroEnd);
+        last = st <= 0 ? 0 : st;
+        return;
+      }
+
       if (menu) {
         if (st > last && st > 100) {
           menu.style.transform = "translateY(-120%)";

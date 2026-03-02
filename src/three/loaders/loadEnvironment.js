@@ -1,10 +1,10 @@
-import { RGBELoader } from "three/examples/jsm/loaders/RGBELoader.js";
+import { HDRLoader } from "three/examples/jsm/loaders/HDRLoader.js";
 
 export function loadEnvironment({ scene, pmrem, hdrPath, intensity }) {
   let envMap = null;
 
   return new Promise((resolve, reject) => {
-    const loader = new RGBELoader();
+    const loader = new HDRLoader();
     loader.load(
       hdrPath,
       (hdrTex) => {
