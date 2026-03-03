@@ -1915,11 +1915,16 @@ h3 {
     font-size: clamp(2.1rem, 11vw, 3.8rem);
   }
 
+  .project-detail-index {
+    display: none;
+  }
+
   .project-detail-cutout {
     position: relative;
     z-index: 4;
     width: min(520px, 92vw);
     min-height: clamp(280px, 42vh, 440px);
+    transform: translateY(clamp(1.6rem, 5vh, 3.6rem));
   }
 
   .project-detail-content {
@@ -2110,7 +2115,7 @@ h3 {
   }
 
   .project-slide-left p {
-    margin-top: 0.58rem;
+    margin-top: clamp(2rem, 5vh, 3rem);
     max-width: min(84vw, 94%);
     font-size: 0.92rem;
     opacity: 0.9;

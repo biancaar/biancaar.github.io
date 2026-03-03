@@ -7,32 +7,54 @@ export default function ScrollToHash() {
   useEffect(() => {
     if (!location.hash) {
       window.scrollTo({ top: 0, left: 0, behavior: "auto" });
-      return;
+      return undefined;
     }
 
     const id = location.hash.replace("#", "");
-    if (!id) return;
+    if (!id) return undefined;
 
-    const scroll = () => {
+    let rafId = 0;
+    const timeoutIds = [];
+
+    const getHeaderOffset = () =>
+      window.matchMedia("(orientation: portrait)").matches ? 84 : 92;
+
+    const scrollToHashTarget = (behavior = "auto") => {
       const el = document.getElementById(id);
       if (!el) return false;
 
-      el.scrollIntoView({ behavior: "smooth", block: "start" });
+      const top = Math.max(
+        window.scrollY + el.getBoundingClientRect().top - getHeaderOffset(),
+        0
+      );
+
+      window.scrollTo({ top, left: 0, behavior });
       return true;
     };
 
-    // 1) prova subito
-    if (scroll()) return;
-
-    // 2) se la pagina/section non è ancora montata, riprova per un attimo
     let tries = 0;
-    const maxTries = 20; // ~ 20 frame
+    const maxTries = 180;
+
     const tick = () => {
       tries += 1;
-      if (scroll() || tries >= maxTries) return;
-      requestAnimationFrame(tick);
+
+      if (scrollToHashTarget("auto")) {
+        // Reinforce after mount/layout refreshes (e.g. GSAP ScrollTrigger setup).
+        timeoutIds.push(setTimeout(() => scrollToHashTarget("auto"), 120));
+        timeoutIds.push(setTimeout(() => scrollToHashTarget("auto"), 420));
+        return;
+      }
+
+      if (tries >= maxTries) return;
+      rafId = requestAnimationFrame(tick);
     };
-    requestAnimationFrame(tick);
+
+    tick();
+
+    return () => {
+      if (rafId) cancelAnimationFrame(rafId);
+      timeoutIds.forEach((timeoutId) => clearTimeout(timeoutId));
+    };
   }, [location.pathname, location.hash]);
 
   return null;
