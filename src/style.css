@@ -934,6 +934,10 @@ h3 {
   flex: 0 0 clamp(160px, 20vw, 320px);
 }
 
+.projects-mobile-scroll-hint {
+  display: none;
+}
+
 .project-slide {
   flex: 0 0 min(1220px, calc(100vw - (var(--pad-x) * 2)));
   min-width: min(1220px, calc(100vw - (var(--pad-x) * 2)));
@@ -1600,6 +1604,16 @@ h3 {
 
 /* Split blocks */
 @media (orientation: portrait) {
+  @keyframes projectsMobileScrollHintBlink {
+    0%,
+    100% {
+      opacity: 0.32;
+    }
+    50% {
+      opacity: 1;
+    }
+  }
+
 
   .project-block-split,
   .project-block-split.is-left {
@@ -1912,7 +1926,7 @@ h3 {
   }
 
   .project-detail-title h1 {
-    font-size: clamp(2.1rem, 11vw, 3.8rem);
+    font-size: clamp(1.75rem, 9.2vw, 3.1rem);
   }
 
   .project-detail-index {
@@ -2061,6 +2075,22 @@ h3 {
 
   .projects-track-tail {
     flex: 0 0 14vw;
+  }
+
+  .projects-mobile-scroll-hint {
+    flex: 0 0 clamp(64px, 18vw, 90px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+  }
+
+  .projects-mobile-scroll-hint img {
+    width: clamp(28px, 7.5vw, 40px);
+    height: auto;
+    opacity: 0.32;
+    filter: drop-shadow(0 0 7px rgba(255, 255, 255, 0.16));
+    animation: projectsMobileScrollHintBlink 2.4s ease-in-out infinite;
   }
 
   .project-slide-card {

@@ -3,6 +3,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { getProjects } from "../data/projects";
 import { getTimeline } from "../data/timeline";
+import swipeDownIcon from "../assets/swipe_down_40dp_FFFFFF_FILL0_wght400_GRAD0_opsz40.png";
 import ThreeScrollScene from "../components/ThreeScrollScene";
 import { Link } from "react-router-dom";
 import { useLanguage } from "../contexts/LanguageContext";
@@ -124,7 +125,7 @@ export default function HomePage() {
         fastScrollEnd,
         leadInFactor = 0,
         enableTouchDrag = false,
-        touchDragFactor = 1.15
+        touchDragFactor = 1
       }) => {
         const projectSection = document.querySelector(".panel-projects");
         const projectTrack = document.querySelector(".projects-track");
@@ -164,34 +165,52 @@ export default function HomePage() {
         const bindMobileTouchDrag = (tweenInstance) => {
           let startX = 0;
           let startY = 0;
-          let startScrollY = 0;
+          let lastX = 0;
           let trackingTouch = false;
           let lockHorizontal = false;
 
-          const lockThreshold = 8;
+          const scrollingElement = document.scrollingElement || document.documentElement;
+          const prevDocScrollBehavior = document.documentElement.style.scrollBehavior;
+          const prevBodyScrollBehavior = document.body.style.scrollBehavior;
+          const prevTouchAction = projectSection.style.touchAction;
+
+          const lockThreshold = 3;
+
+          const enableInstantScrollBehavior = () => {
+            document.documentElement.style.scrollBehavior = "auto";
+            document.body.style.scrollBehavior = "auto";
+          };
+
+          const restoreScrollBehavior = () => {
+            document.documentElement.style.scrollBehavior = prevDocScrollBehavior;
+            document.body.style.scrollBehavior = prevBodyScrollBehavior;
+          };
 
           const onTouchStart = (event) => {
             if (event.touches.length !== 1) return;
             const touch = event.touches[0];
             startX = touch.clientX;
             startY = touch.clientY;
-            startScrollY = window.scrollY || window.pageYOffset || 0;
+            lastX = touch.clientX;
             trackingTouch = true;
             lockHorizontal = false;
+            enableInstantScrollBehavior();
           };
 
           const onTouchMove = (event) => {
             if (!trackingTouch || event.touches.length !== 1) return;
 
             const touch = event.touches[0];
-            const deltaX = touch.clientX - startX;
-            const deltaY = touch.clientY - startY;
+            const totalDeltaX = touch.clientX - startX;
+            const totalDeltaY = touch.clientY - startY;
 
             if (!lockHorizontal) {
               const passedThreshold =
-                Math.abs(deltaX) > lockThreshold || Math.abs(deltaY) > lockThreshold;
+                Math.abs(totalDeltaX) > lockThreshold || Math.abs(totalDeltaY) > lockThreshold;
               if (!passedThreshold) return;
-              lockHorizontal = Math.abs(deltaX) > Math.abs(deltaY);
+
+              lockHorizontal = Math.abs(totalDeltaX) >= Math.abs(totalDeltaY) * 0.85;
+              if (!lockHorizontal) return;
             }
 
             if (!lockHorizontal) return;
@@ -199,29 +218,51 @@ export default function HomePage() {
             const trigger = tweenInstance?.scrollTrigger;
             if (!trigger) return;
 
-            const currentScroll = window.scrollY || window.pageYOffset || 0;
+            const currentScroll = scrollingElement.scrollTop;
             if (currentScroll < trigger.start || currentScroll > trigger.end) return;
 
             event.preventDefault();
-            const nextScroll = startScrollY - deltaX * touchDragFactor;
-            window.scrollTo(0, nextScroll);
+
+            const deltaX = touch.clientX - lastX;
+            const scrollDistance = getScrollDistance();
+            if (scrollDistance <= 0) return;
+
+            const pinDistance = Math.max(trigger.end - trigger.start, 1);
+            const currentX = Number(gsap.getProperty(projectTrack, "x")) || 0;
+            const nextX = gsap.utils.clamp(
+              -scrollDistance,
+              0,
+              currentX + deltaX * touchDragFactor
+            );
+            const nextProgress = -nextX / scrollDistance;
+            const nextScroll = trigger.start + nextProgress * pinDistance;
+
+            gsap.set(projectTrack, { x: nextX });
+            scrollingElement.scrollTop = nextScroll;
+            trigger.update();
+
+            lastX = touch.clientX;
           };
 
           const onTouchEnd = () => {
             trackingTouch = false;
             lockHorizontal = false;
+            restoreScrollBehavior();
           };
 
+          projectSection.style.touchAction = "pan-y";
           projectSection.addEventListener("touchstart", onTouchStart, { passive: true });
           projectSection.addEventListener("touchmove", onTouchMove, { passive: false });
           projectSection.addEventListener("touchend", onTouchEnd);
           projectSection.addEventListener("touchcancel", onTouchEnd);
 
           return () => {
+            projectSection.style.touchAction = prevTouchAction;
             projectSection.removeEventListener("touchstart", onTouchStart);
             projectSection.removeEventListener("touchmove", onTouchMove);
             projectSection.removeEventListener("touchend", onTouchEnd);
             projectSection.removeEventListener("touchcancel", onTouchEnd);
+            restoreScrollBehavior();
           };
         };
 
@@ -277,12 +318,13 @@ export default function HomePage() {
 
       mm.add(MOBILE_QUERY, () =>
         createProjectsHorizontalTween({
-          pinExtraFactor: 0.25,
-          minPinDistance: () => window.innerHeight * 0.95,
-          scrub: true,
+          // Extra pin distance on mobile so the final swipe-down hint is reachable.
+          pinExtraFactor: 0.10,
+          minPinDistance: () => window.innerHeight * 0.50,
+          scrub: 0.05,
           anticipatePin: 0,
-          fastScrollEnd: true,
-          leadInFactor: 0.16,
+          fastScrollEnd: false,
+          leadInFactor: 0,
           enableTouchDrag: true
         })
       );
@@ -540,6 +582,9 @@ export default function HomePage() {
                 </article>
               );
             })}
+            <div className="projects-mobile-scroll-hint" aria-hidden="true">
+              <img src={swipeDownIcon} alt="" />
+            </div>
             <div className="projects-track-tail" aria-hidden="true" />
           </div>
         </div>

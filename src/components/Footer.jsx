@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { useLanguage } from "../contexts/LanguageContext";
+import cvPdf from "../assets/CVRotaruBiancaAndreea.pdf";
 
 const Footer = () => {
   const { t } = useLanguage();
@@ -22,7 +23,7 @@ const Footer = () => {
           <a href="https://www.linkedin.com/in/bianca-rotaru-920ba255" target="_blank" rel="noreferrer">
             LinkedIn
           </a>
-          <a href="/Bianca_Rotaru_CV.pdf" target="_blank" rel="noreferrer">
+          <a href={cvPdf} target="_blank" rel="noreferrer">
             CV
           </a>
         </div>
