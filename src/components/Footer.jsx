@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { useLanguage } from "../contexts/LanguageContext";
-import cvPdf from "../assets/CVRotaruBiancaAndreea.pdf";
+import cvPdf from "../assets/CVRotaruBiancaAndreea_Public.pdf";
 
 const Footer = () => {
   const { t } = useLanguage();

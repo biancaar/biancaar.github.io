@@ -1437,11 +1437,52 @@ h3 {
   align-items: center;
 }
 
+.contact-content {
+  width: 100%;
+}
+
 .contact-content p {
-  max-width: 480px;
-  margin-bottom: 1.2rem;
+  width: 100%;
+  max-width: none;
+  margin: 0 0 1.2rem;
   opacity: 0.75;
   line-height: 1.7;
+  text-align: left;
+}
+
+.contact-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8rem;
+  width: min(480px, calc(100% - 2rem));
+  margin: 1rem auto 0;
+}
+
+.contact-action-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1 1 0;
+  min-width: 0;
+  text-decoration: none;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-weight: 700;
+  font-size: 0.72rem;
+  color: var(--black);
+  background: var(--white);
+  padding: 0.72rem 1.05rem;
+  border-radius: 6px;
+  border: 1px solid var(--white);
+  transition: background 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+}
+
+.contact-action-btn:hover,
+.contact-action-btn:focus-visible {
+  background: var(--black);
+  color: var(--white);
+  border-color: var(--white);
 }
 
 /* Contact form card */
@@ -2331,11 +2372,18 @@ h3 {
   }
 
   .contact-content p {
-    max-width: 100%;
+    width: 100%;
+    margin: 0 0 1rem;
     font-size: clamp(1rem, 3.9vw, 1.14rem);
     line-height: 1.85;
     opacity: 0.9;
-    margin-bottom: 1rem;
+    text-align: left;
+  }
+
+  .contact-actions {
+    justify-content: center;
+    flex-wrap: nowrap;
+    width: calc(100% - 1rem);
   }
 
   .contact-right {

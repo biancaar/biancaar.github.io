@@ -7,6 +7,7 @@ import swipeDownIcon from "../assets/swipe_down_40dp_FFFFFF_FILL0_wght400_GRAD0_
 import ThreeScrollScene from "../components/ThreeScrollScene";
 import { Link } from "react-router-dom";
 import { useLanguage } from "../contexts/LanguageContext";
+import cvPdf from "../assets/CVRotaruBiancaAndreea_Public.pdf";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -597,11 +598,22 @@ export default function HomePage() {
             <p key={`contact-${index}`}>{paragraph}</p>
           ))}
           <p>
-            <strong>{t("home.contact.phoneLabel")}: +39 345 242 1558
-              <br />
-              {t("home.contact.emailLabel")}: bianca.rotaru.a@gmail.com
-            </strong>
+            Per numero di telefono, CV completo o qualsiasi altra informazione usare il form
+            accanto.
           </p>
+          <div className="contact-actions">
+            <a
+              className="contact-action-btn"
+              href="https://www.linkedin.com/in/bianca-rotaru-920ba255"
+              target="_blank"
+              rel="noreferrer"
+            >
+              LinkedIn
+            </a>
+            <a className="contact-action-btn" href={cvPdf} target="_blank" rel="noreferrer">
+              CV
+            </a>
+          </div>
         </div>
         <div className="contact-right">
           <div className="contact-form-card">
