@@ -1,0 +1,23 @@
+﻿/* ==========================================================================
+   GENERIC SECTIONS / PANELS
+   ========================================================================== */
+
+.panel {
+  height: 100vh;
+  padding: var(--pad-section) var(--pad-x);
+  position: relative;
+  z-index: 2;
+}
+
+.panel h2 {
+  font-size: clamp(2.5rem, 6vw, 4rem);
+  margin-bottom: 1rem;
+  letter-spacing: 0.04em;
+}
+
+.panel p {
+  max-width: 480px;
+  opacity: 0.7;
+  line-height: 1.7;
+}
+

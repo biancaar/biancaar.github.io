@@ -6,7 +6,7 @@ export const translations = {
     nav: {
       about: "About Me",
       timeline: "Timeline",
-      projects: "Projects",
+      projects: "Progetti",
       contact: "Contact Me"
     },
     hero: {
@@ -17,19 +17,15 @@ export const translations = {
       about: {
         title: "About Me",
         paragraphs: [
-          "La mia passione per la programmazione e nata a 14 anni, iniziando con il design web e la creazione di siti semplici. Ho poi approfondito SQL, JavaScript e PHP.",
+          "La mia passione per la programmazione e' nata a 14 anni, iniziando con il design web e la creazione di siti semplici. Ho poi approfondito SQL, JavaScript e PHP.",
           "Durante gli anni scolastici ho imparato linguaggi come C++, C# e Java, sviluppando un metodo di problem solving e un approccio strutturato al ragionamento.",
-          "Nell'ultima esperienza lavorativa ho esplorato il mondo del 3D e della realta virtuale usando Unity, Blender e Substance Painter. Questa esperienza ha arricchito la mia prospettiva, permettendomi di unire competenze tecniche e sensibilita estetica per creare esperienze digitali coinvolgenti."
+          "Nell'ultima esperienza lavorativa ho esplorato il mondo del 3D e della realta virtuale usando Unity, Blender e Substance Painter. Questa esperienza ha arricchito la mia prospettiva, permettendomi di unire competenze tecniche e sensibilita' estetica per creare esperienze digitali coinvolgenti."
         ],
-        skillsTitle: "Skills",
-        skills: {
-          webDev: "Web Dev",
-          vrDev: "3D & VR Dev",
-          softwareDev: "Software Dev"
-        }
+        focusLabel: "Focus Attuale"
       },
       timeline: {
-        title: "Esperienze e Formazione"
+        title: "Esperienze e Formazione",
+        meta: "2017 - 2026 • Web • 3D • VR"
       },
       projects: {
         title: "Projects",
@@ -38,8 +34,8 @@ export const translations = {
       contact: {
         title: "Contact Me",
         paragraphs: [
-          "Sono attualmente alla ricerca di nuove opportunita nel web development, con particolare interesse per progetti che uniscano design, interazione e tecnologia.",
-          "Se pensi che il mio profilo possa essere adatto al tuo team o a un progetto, saro felice di parlarne."
+          "Sono attualmente alla ricerca di nuove opportunita' nel web development, con particolare interesse per progetti che uniscano design, interazione e tecnologia.",
+          "Se pensi che il mio profilo possa essere adatto al tuo team o a un progetto, saro' felice di parlarne."
         ],
         phoneLabel: "Cellulare",
         emailLabel: "E-mail",
@@ -52,7 +48,8 @@ export const translations = {
           messagePlaceholder: "Tell me about your project",
           submit: "Send Message"
         }
-      }
+      },
+      backToTopAria: "Back to top"
     },
     footer: {
       role: "Creative Developer - Web & 3D",
@@ -84,15 +81,11 @@ export const translations = {
           "During school years I learned languages such as C++, C# and Java, developing strong problem-solving skills and a structured approach to technical challenges.",
           "In my latest work experience I explored the world of 3D and virtual reality using Unity, Blender and Substance Painter. This helped me combine technical skills and visual sensitivity to build engaging digital experiences."
         ],
-        skillsTitle: "Skills",
-        skills: {
-          webDev: "Web Dev",
-          vrDev: "3D & VR Dev",
-          softwareDev: "Software Dev"
-        }
+        focusLabel: "Current Focus"
       },
       timeline: {
-        title: "Experience & Education"
+        title: "Experience & Education",
+        meta: "2017 - 2026 â€¢ Web â€¢ 3D â€¢ VR"
       },
       projects: {
         title: "Projects",
@@ -115,7 +108,8 @@ export const translations = {
           messagePlaceholder: "Tell me about your project",
           submit: "Send Message"
         }
-      }
+      },
+      backToTopAria: "Back to top"
     },
     footer: {
       role: "Creative Developer - Web & 3D",
@@ -129,4 +123,3 @@ export const translations = {
     }
   }
 };
-

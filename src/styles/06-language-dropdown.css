@@ -1,0 +1,69 @@
+﻿/* ==========================================================================
+   LANGUAGE DROPDOWN
+   ========================================================================== */
+
+.language-selector {
+  position: relative;
+}
+
+.lang-btn {
+  background: none;
+  color: var(--white);
+  border: 1px solid var(--white);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
+  padding: 0.3rem 0.6rem;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.lang-btn-icon {
+  width: 1rem;
+  height: 1rem;
+  display: block;
+}
+
+.lang-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+
+  background: #222;
+  list-style: none;
+  padding: 0.5rem 0;
+  margin: 0;
+
+  display: none;
+  min-width: 100px;
+  border-radius: 4px;
+  z-index: 200;
+}
+
+.lang-dropdown.is-open {
+  display: block;
+}
+
+.lang-dropdown li {
+  padding: 0;
+  margin: 0;
+}
+
+.lang-dropdown button {
+  width: 100%;
+  border: 0;
+  background: transparent;
+  color: var(--white);
+  text-align: left;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  font: inherit;
+}
+
+.lang-dropdown button:hover,
+.lang-dropdown button.is-active {
+  background: #555;
+}
+
+
+

@@ -1,0 +1,129 @@
+﻿/* ==========================================================================
+   SITE MENU (fixed)
+   ========================================================================== */
+
+.site-menu {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 1rem 2rem;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+
+  background: rgba(20, 20, 20, 0.9);
+  color: var(--white);
+  z-index: 100;
+
+  font-family: var(--font-title);
+  letter-spacing: clamp(0.10em, 0.9vw, 0.22em);
+
+  transition: transform 0.4s ease, opacity 0.4s ease;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+/* Logo */
+.logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+  text-decoration: none;
+  color: inherit;
+}
+
+.logo-mark {
+  width: clamp(28px, 3vw, 44px);
+  height: auto;
+  display: block;
+  object-fit: contain;
+}
+
+.logo-text {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.logo:hover {
+  opacity: 0.85;
+}
+
+/* Navigation links */
+.nav-links a {
+  color: var(--white);
+  text-decoration: none;
+  margin-left: 40px;
+
+  font-weight: 700;
+  text-transform: uppercase;
+  transition: color 0.3s, opacity 0.3s;
+  opacity: 0.9;
+}
+
+.nav-links a:hover {
+  color: var(--accent);
+  opacity: 1;
+}
+
+/* Right area (CTA + language) */
+.menu-right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.mobile-menu-toggle {
+  display: none;
+}
+
+.mobile-menu-overlay {
+  display: none;
+}
+
+/* CTA button */
+.contact-btn {
+  background: var(--white);
+  color: var(--black);
+  border: none;
+  border-radius: 2px;
+
+  padding: 10px 20px;
+  font-weight: 800;
+  text-transform: uppercase;
+  cursor: pointer;
+  text-decoration: none;
+  opacity: 0;
+  transform: translate3d(0, -6px, 0);
+  transition:
+    background-color 0.25s ease,
+    color 0.25s ease,
+    transform 0.25s ease,
+    opacity 0.25s ease;
+}
+
+.contact-btn.is-ready {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+  transition-delay: 0.15s;
+}
+
+.contact-btn:hover {
+  background: var(--black);
+  color: var(--white);
+}
+
+.contact-btn:active {
+  transform: translate3d(0, 1px, 0) scale(0.98);
+}
+
+.is-low-performance-ui .site-menu,
+.is-low-performance-ui .mobile-menu-toggle {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+
+

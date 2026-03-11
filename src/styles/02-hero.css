@@ -1,0 +1,56 @@
+﻿/* ==========================================================================
+   HERO
+   ========================================================================== */
+
+.hero {
+  position: relative;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* Titolo principale dietro il modello 3D */
+.hero-title {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  font-family: var(--font-title);
+  font-size: clamp(6rem, 12vw, 10rem);
+  font-weight: 700;
+  /* 900 tends to be too heavy here; 700 keeps better readability. */
+  line-height: 0.9;
+
+  text-align: center;
+  color: rgba(255, 255, 255, 1);
+  mix-blend-mode: lighten;
+
+  z-index: 0;
+  pointer-events: none;
+  letter-spacing: 0.45em;
+  /* Large spacing while keeping the typography legible. */
+  text-transform: uppercase;
+}
+
+/* Subtitle container */
+.hero-subtitle-container {
+  position: absolute;
+  bottom: 15%;
+  left: 15%;
+  width: min(320px, 70%);
+  z-index: 2;
+}
+
+/* Subtitle testo */
+.hero-subtitle {
+  font-family: var(--font-body);
+  font-size: clamp(1rem, 1vw, 1.6rem);
+  letter-spacing: 0.22em;
+  line-height: 1.4;
+  color: var(--white);
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+
+

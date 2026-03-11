@@ -1,0 +1,58 @@
+﻿/* ==========================================================================
+   PROJECT INTRO CARD (immagine grande)
+   ========================================================================== */
+
+.project-intro {
+  margin-top: 2rem;
+  margin-bottom: 3rem;
+}
+
+.project-intro-card {
+  position: relative;
+  width: min(980px, 100%);
+  height: 320px;
+  border-radius: var(--r-lg);
+  overflow: hidden;
+
+  background: #0e0e0e;
+  box-shadow: var(--shadow-lg);
+}
+
+.project-intro-image {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  transform: scale(1.01);
+}
+
+.project-intro-title {
+  position: absolute;
+  left: 1.2rem;
+  bottom: 1.2rem;
+
+  max-width: 80%;
+  background: rgba(0, 0, 0, 0.65);
+  padding: 1rem 1.2rem;
+  border-radius: 12px;
+
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+.project-intro-title h2 {
+  margin: 0;
+  font-size: clamp(1.8rem, 3vw, 2.6rem);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.project-intro-title p {
+  margin-top: 0.4rem;
+  opacity: 0.75;
+  max-width: 60ch;
+  line-height: 1.6;
+}
+
+
+

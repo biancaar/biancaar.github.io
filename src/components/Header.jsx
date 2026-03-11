@@ -2,11 +2,14 @@ import { useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import mobileMenuIcon from "../assets/menu_40dp_FFFFFF_FILL0_wght400_GRAD0_opsz40 (1).png";
 import mobileMenuCloseIcon from "../assets/close_40dp_FFFFFF_FILL0_wght400_GRAD0_opsz40.png";
+import languageArrowIcon from "../assets/arrow_drop_down_40dp_FFFFFF_FILL0_wght400_GRAD0_opsz40.png";
 import { useLanguage } from "../contexts/LanguageContext";
+import { subscribeMediaQueryChange } from "../utils/mediaQuery";
 
 const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isLangOpen, setIsLangOpen] = useState(false);
+  const [isHeaderCtaReady, setIsHeaderCtaReady] = useState(false);
   const selectorRef = useRef(null);
   const { language, setLanguage, t } = useLanguage();
   const location = useLocation();
@@ -48,6 +51,49 @@ const Header = () => {
     };
   }, []);
 
+  useEffect(() => {
+    if (typeof window === "undefined") return undefined;
+
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (prefersReducedMotion) {
+      setIsHeaderCtaReady(true);
+      return undefined;
+    }
+
+    const timer = window.setTimeout(() => setIsHeaderCtaReady(true), 150);
+    return () => window.clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return undefined;
+
+    const root = document.documentElement;
+    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+    const syncUiPerformanceClass = () => {
+      const isPortrait = window.matchMedia("(orientation: portrait)").matches;
+      const cores = navigator.hardwareConcurrency ?? 8;
+      const memory = navigator.deviceMemory ?? 8;
+      const reducedMotion = mediaQuery.matches;
+      const lowPerformanceDevice = reducedMotion || (isPortrait && (cores <= 4 || memory <= 4));
+
+      root.classList.toggle("is-low-performance-ui", lowPerformanceDevice);
+    };
+
+    syncUiPerformanceClass();
+    window.addEventListener("resize", syncUiPerformanceClass);
+    const unsubscribeMediaQuery = subscribeMediaQueryChange(
+      mediaQuery,
+      syncUiPerformanceClass
+    );
+
+    return () => {
+      window.removeEventListener("resize", syncUiPerformanceClass);
+      unsubscribeMediaQuery();
+      root.classList.remove("is-low-performance-ui");
+    };
+  }, []);
+
   return (
     <>
       <header className="site-menu">
@@ -73,7 +119,8 @@ const Header = () => {
               aria-haspopup="menu"
               aria-expanded={isLangOpen}
             >
-              {language.toUpperCase()} v
+              <span>{language.toUpperCase()}</span>
+              <img src={languageArrowIcon} alt="" aria-hidden="true" className="lang-btn-icon" />
             </button>
             <ul className={`lang-dropdown ${isLangOpen ? "is-open" : ""}`} role="menu">
               <li role="none">
@@ -107,7 +154,12 @@ const Header = () => {
             </ul>
           </div>
 
-          <a href="#contact" className="contact-btn">{t("nav.contact")}</a>
+          <a
+            href="#contact"
+            className={`contact-btn ${isHeaderCtaReady ? "is-ready" : ""}`}
+          >
+            {t("nav.contact")}
+          </a>
         </div>
 
         <button

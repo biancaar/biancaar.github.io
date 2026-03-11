@@ -1,0 +1,33 @@
+﻿/* ==========================================================================
+   REVEAL SYSTEM (IntersectionObserver-driven)
+   ========================================================================== */
+
+[data-reveal] {
+  --reveal-delay: 0s;
+  opacity: 0;
+  transform: translate3d(0, 10px, 0);
+  transition:
+    opacity 0.6s cubic-bezier(0.2, 0.8, 0.2, 1),
+    transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+  transition-delay: var(--reveal-delay);
+}
+
+[data-reveal="card"] {
+  transform: translate3d(0, 8px, 0) scale(0.98);
+}
+
+[data-reveal].is-revealed {
+  opacity: 1;
+  transform: translate3d(0, 0, 0) scale(1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
+
+
+

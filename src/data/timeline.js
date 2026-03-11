@@ -15,13 +15,13 @@ const timelineByLanguage = {
       period: "Mag 2023 - Lug 2025",
       title: "Programmatore Informatico",
       description:
-        "Infinitodesign SRL (Parma): sopralluoghi fotografici e scan 3D, coordinamento progetto su GitHub, sviluppo funzionalita, modellazione 3D, tutorial utente e test visori VR."
+        "Infinitodesign SRL (Parma): sopralluoghi fotografici e scan 3D, coordinamento progetto su GitHub, sviluppo funzionalità, modellazione 3D, tutorial utente e test visori VR."
     },
     {
       period: "2025",
       title: "Laurea Triennale in INFORMATICA",
       description:
-        "Universita degli Studi di Parma: approfondimento su programmazione, algoritmi, sistemi operativi, database, intelligenza artificiale e sviluppo software."
+        "Università degli Studi di Parma: approfondimento su programmazione, algoritmi, sistemi operativi, database, intelligenza artificiale e sviluppo software."
     },
     {
       period: "2025",
@@ -62,8 +62,8 @@ const timelineByLanguage = {
 };
 
 export const getTimeline = (language = "it") =>
-  timelineByLanguage[language] || timelineByLanguage.it;
+  [...(timelineByLanguage[language] || timelineByLanguage.it)].reverse();
 
-const timeline = timelineByLanguage.it;
+const timeline = [...timelineByLanguage.it].reverse();
 
 export default timeline;

@@ -1,0 +1,126 @@
+﻿/* ==========================================================================
+   GLOBAL RESET + BASE
+   ========================================================================== */
+
+/* Reset minimale + scroll smooth */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  scroll-behavior: smooth;
+}
+
+/* Design tokens (colori, font, spacing) */
+:root {
+  /* Colors */
+  --bg: #000;
+  --text: #eaeaea;
+  --text-muted: rgba(234, 234, 234, 0.75);
+
+  --panel-bg: rgba(20, 20, 20, 0.55);
+  --panel-bg-hover: rgba(20, 20, 20, 0.7);
+  --panel-border: rgba(255, 255, 255, 0.08);
+  --panel-border-hover: rgba(255, 255, 255, 0.16);
+
+  --white: #fff;
+  --black: #000;
+  --accent: #ffcc00;
+
+  /* Typography */
+  --font-title: "Recursive", system-ui, -apple-system, "Segoe UI", Roboto,
+    Arial, sans-serif;
+  --font-body: "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", Roboto,
+    Arial, sans-serif;
+
+  /* Radius + shadow */
+  --r-sm: 8px;
+  --r-md: 14px;
+  --r-lg: 16px;
+
+  --shadow-lg: 0 20px 40px rgba(0, 0, 0, 0.35);
+  --shadow-md: 0 10px 25px rgba(0, 0, 0, 0.5);
+
+  /* Layout spacing */
+  --pad-x: 10vw;
+  --pad-section: 20vh;
+
+  /* Mobile layout tokens (used in portrait media query) */
+  --mobile-fixed-header-height: 72px;
+  --mobile-section-gap: clamp(4.5rem, 10svh, 6rem);
+  --mobile-section-pad-y: clamp(4.5rem, 8svh, 6rem);
+  --mobile-section-pad-x: 4vw;
+  --mobile-section-overlay-bg: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0) 0%,
+    rgba(0, 0, 0, 0.46) 20%,
+    rgba(0, 0, 0, 0.46) 80%,
+    rgba(0, 0, 0, 0) 100%
+  );
+}
+
+/* Base document */
+html,
+body,
+#root {
+  width: 100%;
+  max-width: 100%;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  overflow-x: hidden;
+  text-rendering: geometricPrecision;
+  font-kerning: normal;
+  font-feature-settings: "kern" 1, "liga" 1, "clig" 1;
+}
+
+@media (orientation: portrait) {
+  /* Keep the layout full-bleed on mobile and hide scrollbars across engines. */
+  html,
+  body,
+  #root {
+    width: 100dvw;
+    max-width: 100dvw;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    overflow-x: clip;
+    scroll-behavior: auto !important;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  html::-webkit-scrollbar,
+  body::-webkit-scrollbar,
+  #root::-webkit-scrollbar {
+    width: 0 !important;
+    height: 0 !important;
+    display: none;
+  }
+
+  * {
+    scrollbar-width: none;
+  }
+
+  *::-webkit-scrollbar {
+    width: 0 !important;
+    height: 0 !important;
+    display: none;
+  }
+
+  @supports (overflow-y: overlay) {
+    html {
+      overflow-y: overlay;
+    }
+  }
+}
+
+/* Headings default */
+h1,
+h2,
+h3 {
+  font-family: var(--font-title);
+}
+
+
+

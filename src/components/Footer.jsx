@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { useLanguage } from "../contexts/LanguageContext";
 import cvPdf from "../assets/CVRotaruBiancaAndreea_Public.pdf";
+import { SITE_CONFIG } from "../config/site.config";
 
 const Footer = () => {
   const { t } = useLanguage();
@@ -9,7 +10,7 @@ const Footer = () => {
     <footer className="site-footer">
       <div className="footer-inner">
         <div className="footer-left">
-          <strong className="footer-name">Bianca Rotaru</strong>
+          <strong className="footer-name">{SITE_CONFIG.ownerName}</strong>
           <span className="footer-role">{t("footer.role")}</span>
         </div>
 
@@ -20,7 +21,7 @@ const Footer = () => {
         </nav>
 
         <div className="footer-right">
-          <a href="https://www.linkedin.com/in/bianca-rotaru-920ba255" target="_blank" rel="noreferrer">
+          <a href={SITE_CONFIG.linkedInUrl} target="_blank" rel="noreferrer">
             LinkedIn
           </a>
           <a href={cvPdf} target="_blank" rel="noreferrer">

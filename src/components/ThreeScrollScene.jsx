@@ -14,6 +14,8 @@ import { createPointerNDC } from "../three/features/createPointerNDC";
 import { createMouseLight } from "../three/features/createMouseLight";
 import { createParallax } from "../three/features/createParallax";
 import { createGodray } from "../three/features/createGodray";
+import { addStarParticles } from "../three/features/StarParticles";
+import { addNebulaLayer } from "../three/features/NebulaLayer";
 
 import { setupScroll } from "../three/setupScroll";
 import { safeDispose } from "../three/utils/dispose";
@@ -28,6 +30,24 @@ export default function ThreeScrollScene() {
     const disposables = [];
     let rafId = 0;
     let scrollHandle = null;
+    let starsLayer = { update: () => {}, dispose: () => {} };
+    let nebulaLayer = { update: () => {}, dispose: () => {} };
+    let modelCenter = null;
+
+    const getQualityOptions = () => {
+      const mobileByWidth =
+        window.innerWidth < (THREE_CONFIG.quality?.mobileBreakpoint ?? 768);
+      const mobileByDpr =
+        window.devicePixelRatio > (THREE_CONFIG.quality?.dprThreshold ?? 1.5);
+      const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+      return {
+        isMobile: mobileByWidth || mobileByDpr,
+        reducedMotion
+      };
+    };
+
+    let qualityOptions = getQualityOptions();
 
     const scene = createScene();
 
@@ -73,27 +93,49 @@ export default function ThreeScrollScene() {
 
     const heroCenter = new THREE.Vector3(0, 0.7, 0);
 
-    const applyShadows = () => {
-      const { frontKey } = THREE_CONFIG.lights;
+    const applyShadows = ({ frontKey, whiteRim, quality }) => {
+      const shadowConfig = THREE_CONFIG.shadows;
+      if (!frontKey || !shadowConfig?.enabled) return;
 
-      const front = scene.children.find(
-        (o) => o.isSpotLight && o.color?.getHex?.() === frontKey.color
-      );
+      renderer.shadowMap.enabled = true;
+      renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
-      if (!front) return;
+      const frontShadow = shadowConfig.frontKey;
+      const frontMapSize = quality.isMobile
+        ? frontShadow.mapSizeMobile
+        : frontShadow.mapSizeDesktop;
 
-      front.castShadow = true;
-      front.distance = THREE_CONFIG.shadows.frontKey.distance;
-      front.decay = THREE_CONFIG.shadows.frontKey.decay;
-      front.angle = THREE_CONFIG.shadows.frontKey.angle;
-      front.penumbra = THREE_CONFIG.shadows.frontKey.penumbra;
+      frontKey.castShadow = !!frontShadow.castShadow;
+      frontKey.distance = frontShadow.distance;
+      frontKey.decay = frontShadow.decay;
+      frontKey.angle = frontShadow.angle;
+      frontKey.penumbra = frontShadow.penumbra;
 
-      front.shadow.mapSize.set(...THREE_CONFIG.shadows.frontKey.mapSize);
-      front.shadow.camera.near = THREE_CONFIG.shadows.frontKey.near;
-      front.shadow.camera.far = THREE_CONFIG.shadows.frontKey.far;
+      frontKey.shadow.mapSize.set(frontMapSize[0], frontMapSize[1]);
+      frontKey.shadow.camera.near = frontShadow.near;
+      frontKey.shadow.camera.far = frontShadow.far;
+      frontKey.shadow.bias = frontShadow.bias;
+      frontKey.shadow.normalBias = frontShadow.normalBias;
 
-      front.shadow.bias = THREE_CONFIG.shadows.frontKey.bias;
-      front.shadow.normalBias = THREE_CONFIG.shadows.frontKey.normalBias;
+      if (!whiteRim) return;
+
+      const whiteShadow = shadowConfig.whiteRim;
+      const enableWhiteShadow = quality.isMobile
+        ? !!whiteShadow.castShadowMobile
+        : !!whiteShadow.castShadowDesktop;
+
+      whiteRim.castShadow = enableWhiteShadow;
+      if (!enableWhiteShadow) return;
+
+      const whiteMapSize = quality.isMobile
+        ? whiteShadow.mapSizeMobile
+        : whiteShadow.mapSizeDesktop;
+
+      whiteRim.shadow.mapSize.set(whiteMapSize[0], whiteMapSize[1]);
+      whiteRim.shadow.camera.near = whiteShadow.near;
+      whiteRim.shadow.camera.far = whiteShadow.far;
+      whiteRim.shadow.bias = whiteShadow.bias;
+      whiteRim.shadow.normalBias = whiteShadow.normalBias;
     };
 
     const addBaseLights = () => {
@@ -110,6 +152,7 @@ export default function ThreeScrollScene() {
         L.blueRim.decay
       );
       blue.position.set(...L.blueRim.position);
+      blue.castShadow = false;
       scene.add(blue);
 
       const red = new THREE.SpotLight(
@@ -121,6 +164,8 @@ export default function ThreeScrollScene() {
         L.redRim.decay
       );
       red.position.set(...L.redRim.position);
+      red.castShadow = false;
+      red.visible = !(qualityOptions.isMobile && L.redRim.disableOnMobile);
       scene.add(red);
 
       const front = new THREE.SpotLight(
@@ -132,6 +177,7 @@ export default function ThreeScrollScene() {
         L.frontKey.decay
       );
       front.position.set(...L.frontKey.position);
+      front.castShadow = false;
       scene.add(front);
 
       const extra = new THREE.SpotLight(
@@ -143,6 +189,7 @@ export default function ThreeScrollScene() {
         L.extraRim.decay
       );
       extra.position.set(...L.extraRim.position);
+      extra.castShadow = false;
       scene.add(extra);
 
       const white = new THREE.SpotLight(
@@ -154,16 +201,24 @@ export default function ThreeScrollScene() {
         L.whiteRim.decay
       );
       white.position.set(...L.whiteRim.position);
-      white.castShadow = true;
+      white.castShadow = false;
       scene.add(white);
 
-      front.castShadow = true;
-      applyShadows();
+      applyShadows({
+        frontKey: front,
+        whiteRim: white,
+        quality: qualityOptions
+      });
 
-      return { frontKey: front };
+      return {
+        frontKey: front,
+        whiteRim: white,
+        redRim: red,
+        allSpots: [blue, red, front, extra, white]
+      };
     };
 
-    const { frontKey } = addBaseLights();
+    const baseLights = addBaseLights();
 
     const init = async () => {
       try {
@@ -183,32 +238,9 @@ export default function ThreeScrollScene() {
         disposables.push(loaded);
 
         heroCenter.copy(loaded.centerScaled);
+        modelCenter = loaded.centerScaled.clone();
 
         parallax.setBase();
-
-        const shadowKey = new THREE.DirectionalLight(0xffffff, 0.85);
-        shadowKey.castShadow = true;
-        shadowKey.position.set(1.0, 3.0, 10.5);
-        scene.add(shadowKey);
-
-        shadowKey.target.position.set(
-          loaded.centerScaled.x,
-          loaded.centerScaled.y,
-          loaded.centerScaled.z
-        );
-        scene.add(shadowKey.target);
-
-        shadowKey.shadow.mapSize.set(4096, 4096);
-
-        const r = Math.max(loaded.sizeScaled.x, loaded.sizeScaled.y, loaded.sizeScaled.z) * 0.55;
-        shadowKey.shadow.camera.left = -r;
-        shadowKey.shadow.camera.right = r;
-        shadowKey.shadow.camera.top = r;
-        shadowKey.shadow.camera.bottom = -r;
-        shadowKey.shadow.camera.near = 0.1;
-        shadowKey.shadow.camera.far = r * 6;
-        shadowKey.shadow.bias = -0.00015;
-        shadowKey.shadow.normalBias = 0.006;
 
         const topY = loaded.centerScaled.y + loaded.sizeScaled.y * 0.5;
         const capitalY = topY - loaded.sizeScaled.y * 0.15;
@@ -237,7 +269,30 @@ export default function ThreeScrollScene() {
         const keyTarget = new THREE.Object3D();
         keyTarget.position.set(loaded.centerScaled.x, capitalY, loaded.centerScaled.z);
         scene.add(keyTarget);
-        frontKey.target = keyTarget;
+        for (const spot of baseLights.allSpots) {
+          spot.target = keyTarget;
+        }
+
+        applyShadows({
+          frontKey: baseLights.frontKey,
+          whiteRim: baseLights.whiteRim,
+          quality: qualityOptions
+        });
+
+        starsLayer = addStarParticles(scene, {
+          config: THREE_CONFIG.stars,
+          isMobile: qualityOptions.isMobile,
+          reducedMotion: qualityOptions.reducedMotion,
+          anchor: loaded.centerScaled
+        });
+
+        nebulaLayer = addNebulaLayer(scene, {
+          config: THREE_CONFIG.nebula,
+          camera,
+          isMobile: qualityOptions.isMobile,
+          reducedMotion: qualityOptions.reducedMotion,
+          anchor: loaded.centerScaled
+        });
 
         camera.near = Math.min(cameraDistance / 50, THREE_CONFIG.camera.near);
         camera.far = cameraDistance * 20;
@@ -259,8 +314,11 @@ export default function ThreeScrollScene() {
     const animate = () => {
       rafId = requestAnimationFrame(animate);
 
-      const t = clock.getElapsedTime();
+      const dt = clock.getDelta();
+      const t = clock.elapsedTime;
       godray.update(t);
+      starsLayer.update(dt);
+      nebulaLayer.update(dt);
 
       mouseLight.update({ ndc: pointer.ndc, heroCenter });
       parallax.update({ ndc: pointer.ndc });
@@ -273,6 +331,42 @@ export default function ThreeScrollScene() {
       camera.aspect = window.innerWidth / window.innerHeight;
       camera.updateProjectionMatrix();
       renderer.setSize(window.innerWidth, window.innerHeight);
+
+      const nextQuality = getQualityOptions();
+      const qualityChanged = nextQuality.isMobile !== qualityOptions.isMobile;
+      qualityOptions = nextQuality;
+
+      if (baseLights.redRim) {
+        baseLights.redRim.visible = !(
+          qualityOptions.isMobile && THREE_CONFIG.lights.redRim.disableOnMobile
+        );
+      }
+
+      applyShadows({
+        frontKey: baseLights.frontKey,
+        whiteRim: baseLights.whiteRim,
+        quality: qualityOptions
+      });
+
+      if (qualityChanged && modelCenter) {
+        starsLayer.dispose();
+        nebulaLayer.dispose();
+
+        starsLayer = addStarParticles(scene, {
+          config: THREE_CONFIG.stars,
+          isMobile: qualityOptions.isMobile,
+          reducedMotion: qualityOptions.reducedMotion,
+          anchor: modelCenter
+        });
+
+        nebulaLayer = addNebulaLayer(scene, {
+          config: THREE_CONFIG.nebula,
+          camera,
+          isMobile: qualityOptions.isMobile,
+          reducedMotion: qualityOptions.reducedMotion,
+          anchor: modelCenter
+        });
+      }
     };
     window.addEventListener("resize", onResize);
 
@@ -283,6 +377,8 @@ export default function ThreeScrollScene() {
       scrollHandle?.kill?.();
       godray.dispose();
       mouseLight.dispose();
+      starsLayer.dispose();
+      nebulaLayer.dispose();
 
       safeDispose(disposables);
     };

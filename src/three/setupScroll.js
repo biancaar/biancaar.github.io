@@ -11,6 +11,7 @@ export function setupScroll({ model, camera, sizeScaled, centerScaled }) {
   }
 
   const baseRotY = 0;
+  const preAboutRotY = baseRotY + Math.PI * 0.03;
   const projectEntryRotY = baseRotY + Math.PI * 0.25;
   const basePosX = model.position.x;
 
@@ -19,42 +20,45 @@ export function setupScroll({ model, camera, sizeScaled, centerScaled }) {
 
   const firstPanel = document.querySelector(".panel:nth-of-type(1)");
   const heroSection = document.querySelector(".hero");
+  const aboutSpacerSection = document.querySelector(".panel-about-spacer");
   const aboutSection = document.querySelector(".panel-skills");
+  const projectsSection = document.querySelector(".panel-projects");
   const footer = document.querySelector(".site-footer");
+  const hasVisibleHeight = (el) => !!el && el.offsetHeight > 4;
+  const aboutMotionTrigger = hasVisibleHeight(aboutSpacerSection)
+    ? aboutSpacerSection
+    : aboutSection;
+  const aboutMotionEnd = aboutMotionTrigger === aboutSpacerSection
+    ? "bottom top"
+    : "top top";
+  const rotateMotionTrigger = aboutSection || aboutMotionTrigger || ".panel-skills";
 
   const aboutShiftTween = gsap.fromTo(
     model.position,
     { x: basePosX },
     {
-      x: basePosX + sizeScaled.x * 0.35,
+      x: () =>
+        basePosX +
+        sizeScaled.x *
+          (window.matchMedia("(orientation: landscape)").matches ? 0.5 : 0.35),
       ease: "none",
       immediateRender: false,
       scrollTrigger: {
-        trigger: aboutSection || ".panel-skills",
+        trigger: aboutMotionTrigger || ".panel-skills",
         start: "top bottom",
-        end: "top top",
+        end: aboutMotionEnd,
         scrub: true,
         invalidateOnRefresh: true
       }
     }
   );
 
-  const aboutRotateTween = gsap.fromTo(
-    model.rotation,
-    { y: baseRotY },
-    {
-      y: projectEntryRotY,
-      ease: "none",
-      immediateRender: false,
-      scrollTrigger: {
-        trigger: aboutSection || ".panel-skills",
-        start: "top bottom",
-        end: "top top",
-        scrub: true,
-        invalidateOnRefresh: true
-      }
-    }
-  );
+  const aboutRotateProbe = ScrollTrigger.create({
+    trigger: rotateMotionTrigger,
+    start: "bottom bottom",
+    end: "bottom top",
+    invalidateOnRefresh: true
+  });
 
   const camStartY = camera.position.y;
   const camEndY = camStartY - sizeScaled.y * 0.8;
@@ -66,13 +70,40 @@ export function setupScroll({ model, camera, sizeScaled, centerScaled }) {
     movingScroll: 1
   };
 
+  const rotationState = {
+    heroStartScroll: 0,
+    aboutStartScroll: 0,
+    aboutEndScroll: 1
+  };
+
+  // Probe trigger used only to read the effective scroll position where
+  // the Projects section enters (accounts for pin spacing in previous sections).
+  const projectsEntryProbe = projectsSection
+    ? ScrollTrigger.create({
+        trigger: projectsSection,
+        start: "top top",
+        end: "top top",
+        invalidateOnRefresh: true
+      })
+    : null;
+
   const refreshCameraRanges = () => {
     const viewportH = window.innerHeight || 1;
-    const startScroll = aboutSection
-      ? Math.max(aboutSection.offsetTop, 0)
+    const fallbackStartScroll = aboutMotionTrigger
+      ? Math.max(aboutMotionTrigger.offsetTop, 0)
       : heroSection
         ? heroSection.offsetTop + heroSection.offsetHeight
         : (firstPanel ? firstPanel.offsetTop + firstPanel.offsetHeight : 0);
+
+    const projectsEntryScroll =
+      projectsEntryProbe && Number.isFinite(projectsEntryProbe.start)
+        ? projectsEntryProbe.start
+        : null;
+
+    // Start descending in the transition Timeline -> Projects.
+    const startScroll = projectsEntryScroll !== null
+      ? Math.max(projectsEntryScroll - viewportH * 1.0, 0)
+      : fallbackStartScroll;
 
     const maxScroll = ScrollTrigger.maxScroll(window);
     const pageEnd = footer
@@ -82,9 +113,20 @@ export function setupScroll({ model, camera, sizeScaled, centerScaled }) {
     const endScroll = Math.max(pageEnd, startScroll + viewportH * 0.8);
     const movingScroll = Math.max(endScroll - startScroll, 1);
 
+    const aboutStartScroll = Number.isFinite(aboutRotateProbe.start)
+      ? aboutRotateProbe.start
+      : 0;
+    const aboutEndScroll = Number.isFinite(aboutRotateProbe.end)
+      ? aboutRotateProbe.end
+      : aboutStartScroll + 1;
+    const heroStartScroll = heroSection ? Math.max(heroSection.offsetTop, 0) : 0;
+
     scrollState.startScroll = startScroll;
     scrollState.endScroll = endScroll;
     scrollState.movingScroll = movingScroll;
+    rotationState.heroStartScroll = heroStartScroll;
+    rotationState.aboutStartScroll = aboutStartScroll;
+    rotationState.aboutEndScroll = Math.max(aboutEndScroll, aboutStartScroll + 1);
   };
 
   const updateCameraByScroll = (scrollPos) => {
@@ -92,6 +134,26 @@ export function setupScroll({ model, camera, sizeScaled, centerScaled }) {
     const { startScroll, movingScroll } = scrollState;
     const progress = clamp01((s - startScroll) / movingScroll);
     camera.position.y = camStartY + (camEndY - camStartY) * progress;
+  };
+
+  const updateRotationByScroll = (scrollPos) => {
+    const s = scrollPos;
+    const { heroStartScroll, aboutStartScroll, aboutEndScroll } = rotationState;
+
+    if (s <= aboutStartScroll) {
+      const phase = clamp01((s - heroStartScroll) / Math.max(aboutStartScroll - heroStartScroll, 1));
+      model.rotation.y = baseRotY + (preAboutRotY - baseRotY) * phase;
+      return;
+    }
+
+    if (s <= aboutEndScroll) {
+      const phase = clamp01((s - aboutStartScroll) / Math.max(aboutEndScroll - aboutStartScroll, 1));
+      model.rotation.y = preAboutRotY + (projectEntryRotY - preAboutRotY) * phase;
+      return;
+    }
+
+    // Freeze rotation once Timeline is reached.
+    model.rotation.y = projectEntryRotY;
   };
 
   refreshCameraRanges();
@@ -102,8 +164,14 @@ export function setupScroll({ model, camera, sizeScaled, centerScaled }) {
     scrub: 0.35,
     invalidateOnRefresh: true,
     onRefreshInit: refreshCameraRanges,
-    onRefresh: (self) => updateCameraByScroll(self.scroll()),
-    onUpdate: (self) => updateCameraByScroll(self.scroll())
+    onRefresh: (self) => {
+      updateCameraByScroll(self.scroll());
+      updateRotationByScroll(self.scroll());
+    },
+    onUpdate: (self) => {
+      updateCameraByScroll(self.scroll());
+      updateRotationByScroll(self.scroll());
+    }
   });
 
   ScrollTrigger.refresh();
@@ -113,8 +181,8 @@ export function setupScroll({ model, camera, sizeScaled, centerScaled }) {
       kill: () => {
       aboutShiftTween.scrollTrigger?.kill?.();
       aboutShiftTween.kill?.();
-      aboutRotateTween.scrollTrigger?.kill?.();
-      aboutRotateTween.kill?.();
+      aboutRotateProbe.kill?.();
+      projectsEntryProbe?.kill?.();
       camScrollTrigger.kill?.();
     }
   };
