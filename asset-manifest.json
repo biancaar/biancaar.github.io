@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/static/css/main.4caa3579.css",
-    "main.js": "/static/js/main.26850613.js",
+    "main.css": "/static/css/main.5f7afb03.css",
+    "main.js": "/static/js/main.d53555cf.js",
     "static/media/AudioOrgano.mov": "/static/media/AudioOrgano.ec749c531572adef1cfb.mov",
     "static/media/RenderPieve2.png": "/static/media/RenderPieve2.91fb1c604dcf7bec0e02.png",
     "static/media/RenderPieve1.png": "/static/media/RenderPieve1.f535c99afb609fb42a36.png",
@@ -26,15 +26,16 @@
     "static/media/ColumnHD.jpg": "/static/media/ColumnHD.150767f3df2f839663e4.jpg",
     "static/media/AmboneIpotesi1.jpg": "/static/media/AmboneIpotesi1.850fde02bfd8220a9af2.jpg",
     "static/media/handsVR.jpg": "/static/media/handsVR.846d836ac5d709a7d48d.jpg",
+    "static/media/Test.png": "/static/media/Test.3bd73a40266c32f61d9c.png",
     "static/media/amboneantico1.jpg": "/static/media/amboneantico1.700eeb65fe088da7dfdf.jpg",
     "static/media/ColumnLD.jpg": "/static/media/ColumnLD.e8a54da79e10a11df601.jpg",
     "static/media/bianca-rotaru-immagine-2025-08-20-124028.png": "/static/media/bianca-rotaru-immagine-2025-08-20-124028.d24589d6d0272728d0a7.png",
     "index.html": "/index.html",
-    "main.4caa3579.css.map": "/static/css/main.4caa3579.css.map",
-    "main.26850613.js.map": "/static/js/main.26850613.js.map"
+    "main.5f7afb03.css.map": "/static/css/main.5f7afb03.css.map",
+    "main.d53555cf.js.map": "/static/js/main.d53555cf.js.map"
   },
   "entrypoints": [
-    "static/css/main.4caa3579.css",
-    "static/js/main.26850613.js"
+    "static/css/main.5f7afb03.css",
+    "static/js/main.d53555cf.js"
   ]
 }
