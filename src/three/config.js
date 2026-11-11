@@ -166,7 +166,7 @@ export const THREE_CONFIG = {
   },
 
   model: {
-    glbPath: "/models/Column.glb",
+    glbPath: "/models/testsRedo_web_optimized.glb",
     heightMapPath: "/textures/mat/ColumnHeightMap.png",
     displacementScale: 0.01,
     displacementBias: 0.0,
