@@ -1,52 +1,53 @@
-# Bianca Rotaru — Interactive 3D Web Portfolio
+# Bianca Rotaru — portfolio
 
-🌐 Live website: [https://biancaar.github.io/](https://biancaar.github.io/)
+Portfolio React + Vite, con contenuti IT/EN, colonna Three.js, timeline e progetti responsive.
 
-This repository contains the source code of my personal portfolio website.
+## Avvio
 
-The goal of this project is to present my work through an interactive experience rather than a traditional static page.
-The website integrates real-time 3D rendering, scroll-driven animation and physically based materials to showcase projects in a more immersive way.
+```powershell
+npm install
+npm run dev
+```
 
----
+`npm run build` genera `dist/`; `npm run preview` lo serve localmente. `npm run lint` controlla il codice e `npm test` esegue i test dello scorrimento.
 
-## Main Features
+## GitHub Pages e vecchio portfolio
 
-* Real-time 3D scene rendered with **Three.js**
-* Physically Based Rendering (HDR environment lighting, shadows, normal maps)
-* Scroll-driven cinematic camera animation (GSAP ScrollTrigger)
-* Optimized models and textures for web performance
-* Responsive layout built with React
+La procedura pronta per sostituire il vecchio sito, conservarlo come `OldPortfolio` e pubblicare il nuovo è descritta in [docs/MIGRAZIONE.md](docs/MIGRAZIONE.md). Dopo la migrazione, `npm run deploy` pubblica dal clone GitHub i sorgenti su `main` e la build su `gh-pages`.
 
----
+## Modificare i contenuti
 
-## Technologies Used
+La guida completa è in [docs/CONTENUTI.md](docs/CONTENUTI.md), con una tabella per ogni sezione, esempi per immagini e CV e la mappa degli stili.
 
-* React
-* Three.js
-* GSAP (ScrollTrigger)
-* WebGL
-* PBR Texturing workflow
-* GitHub Pages deployment
+- `src/data/`: testi, progetti, esperienze, competenze e collegamenti.
+- `src/components/sections/`: Hero, About, Journey, hobby e contatti.
+- `src/components/projects/`: galleria, anteprime e finestra di dettaglio.
+- `src/components/layout/`: menu e footer.
+- `src/components/contact/`: modulo e pagina di ringraziamento.
+- `src/services/`: invio del modulo, separato dall'interfaccia.
+- `src/components/ui/`: elementi riutilizzabili.
+- `src/components/motion/`: animazioni decorative.
+- `src/components/three/`: scena 3D.
+- `src/config/`: breakpoint, camera, luci e asset della colonna.
+- `src/hooks/`: comportamento condiviso delle scene e media query.
+- `src/styles/`: stili suddivisi per responsabilità; `src/styles.css` li importa.
+- `public/media/`: modelli e immagini; `public/cv/`: curriculum.
+- `tests/`: regressioni sul calcolo dello scroll.
 
----
+I controlli verificano anche i testi IT/EN, la presenza degli asset e le risposte del servizio contatti. I file temporanei e gli asset scartati sono conservati in `.asset-import/`, esclusa da Git e dalla migrazione.
 
-## Project Structure
+## Scorrimento
 
-* `/src/components` → React components and 3D scene logic
-* `/public/models` → Optimized 3D assets (GLB)
-* `/public/textures` → PBR texture sets
-* `/public/env` → HDR environment maps
+Journey e Work condividono `useHorizontalScene`: ciascuna ha un palco `position: sticky` e una lunghezza misurata dal contenuto. Nessun blocco GSAP, spacer o wrapper trasformato modifica l'altezza della pagina. GSAP gestisce soltanto le animazioni decorative. Il passaggio desktop/tablet/mobile considera larghezza, altezza, orientamento e movimento ridotto.
 
----
+## Colonna e immagine di riserva
 
-## About the Project
+Il modello viene caricato separatamente dal resto dell'applicazione. Il PNG ad alta risoluzione resta visibile durante il caricamento o se WebGL non è disponibile. Asset e illuminazione si configurano in `src/config/column.js`.
 
-This portfolio focuses on bridging **real-time graphics and web development**.
-The 3D column scene is treated as a hero object: lighting, materials and camera movement are designed to guide the viewer's attention, similar to a real-time engine presentation.
+Per rigenerare il render statico dal modello, con Blender installato:
 
----
+```powershell
+& 'C:\Program Files\Blender Foundation\Blender 5.0\blender.exe' --background --factory-startup --python scripts/render-column.py
+```
 
-## Author
-
-Bianca Rotaru
-Full-stack & Real-time Graphics Developer
+Il render offline usa luci impostate nello script; per farlo corrispondere a una nuova illuminazione Three.js aggiorna anche quelle. Non viene pubblicato nulla automaticamente.

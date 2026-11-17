@@ -1,0 +1,8 @@
+/* Style entry point. Section-specific rules live in styles/. */
+@import './styles/base.css';
+@import './styles/layout.css';
+@import './styles/sections.css';
+@import './styles/projects.css';
+@import './styles/hero.css';
+@import './styles/scroll-scenes.css';
+@import './styles/contact-feedback.css';

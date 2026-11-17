@@ -1,381 +1,329 @@
-// src/data/projects.js
-
-import p1 from "../assets/project1.jpg";
-import p2 from "../assets/project2.jpg";
-import p3 from "../assets/project3.jpg";
-
-// immagini interne ai progetti
-import p1Front from "../assets/RenderPieve1.png";
-import p1Teleport from "../assets/project1_b.jpg";
-import p1Hands from "../assets/handsVR.jpg";
-import p1Interno from "../assets/luciunity.jpg";
-import p1P1 from "../assets/one.png";
-import p1P2 from "../assets/DueHD.jpg";
-import p1P3 from "../assets/AmboneIpotesi1.jpg";
-import p1P1a from "../assets/Timeline1.jpg";
-import p1P2b from "../assets/Timeline2.jpg";
-import p1P3c from "../assets/amboneantico1.jpg";
-
-import p2Progetto from "../assets/FormellaProgetto.png";
-import p2Risultato from "../assets/FormellaStampa.png";
-
-import p3HD1 from "../assets/ColumnHD.jpg";
-import p3LD1 from "../assets/ColumnLD.jpg";
-import p3Mod from "../assets/bianca-rotaru-immagine-2025-08-20-124028.png";
-import p3Full from "../assets/project3.jpg";
-
-import p1PreviewA from "../assets/com.oculus.vrshell-20250313-090753.jpg";
-import p1HeroImage from "../assets/RenderPieve2.png";
-import centerPlaceholder from "../assets/20241203_124918.png";
-import videoPlaceholder from "../assets/AudioOrgano.mov";
-import formellaCenter from "../assets/Formella.png";
-import formellaVideo from "../assets/FormellaVideo.mp4";
-import formellaPreviewA from "../assets/FormellaProgetto.png";
-import formellaPreviewB from "../assets/FormellaStampa.png";
-import optimizationVideo from "../assets/3DOptimization.mp4";
-import render3Center from "../assets/Render2.png";
-import columnHDPreview from "../assets/ColumnHD.jpg";
-import columnLDPreview from "../assets/ColumnLD.jpg";
-
-const projectsIt = [
+// Editable portfolio content. Keep both en/it translations in sync.
+// Array order controls the project sequence; gallery contains optional detail images.
+export const projects = [
   {
-    id: 1,
-    title: "Immersive VR Tour",
-    subtitle: "Applicazione interattiva per la realta' virtuale",
-    cover: p1,
-    heroImage: p1HeroImage,
-    heroScale: 2.1,
-    centerImage: centerPlaceholder,
-    centerScale: 1.3,
-    previewVideo: videoPlaceholder,
-    previewVideoScale: 1.28,
-    previewImageA: p1PreviewA,
-    previewTitle: "Pieve di Fornovo",
-
-    blocks: [
+    "id": "pieve",
+    "number": "01",
+    "featured": true,
+    "image": "/media/projects/pieve.png",
+    "category": {
+      "en": "Immersive development",
+      "it": "Sviluppo immersivo"
+    },
+    "title": {
+      "en": "Pieve di Fornovo",
+      "it": "Pieve di Fornovo"
+    },
+    "subtitle": {
+      "it": "Visitare la Pieve con un visore, anche senza controller.",
+      "en": "Visiting the church in VR, with or without controllers."
+    },
+    "summary": {
+      "it": "Da Infinitodesign ho lavorato alla visita virtuale della Pieve di Fornovo: sviluppo in Unity, ricostruzioni 3D e interazione con le mani su Meta Quest 2.",
+      "en": "At Infinitodesign, I worked on a virtual visit to the Pieve di Fornovo, developing in Unity, creating 3D reconstructions and adding hand interaction on Meta Quest 2."
+    },
+    "details": {
+      "it": "Da Infinitodesign ho lavorato alla visita virtuale della Pieve di Fornovo, occupandomi dello sviluppo in Unity, della modellazione e dell’ottimizzazione degli ambienti 3D per Meta Quest 2. La visita permette di esplorare la chiesa, consultare contenuti e vedere ricostruzioni storiche.\n\nDurante le prove con il pubblico, alcuni visitatori lasciavano cadere i controller. Ho quindi introdotto una modalità con il tracciamento delle mani, per consentire la visita anche senza impugnarli. È stata una delle modifiche nate osservando le persone usare l’applicazione.\n\nPer alleggerire la scena ho lavorato su luci precalcolate, livelli di dettaglio e occlusione degli oggetti non visibili. Il progetto fa parte anche del mio percorso di tesi.",
+      "en": "At Infinitodesign, I worked on a virtual visit to the Pieve di Fornovo, handling Unity development, 3D modeling and scene optimization for Meta Quest 2. Visitors can explore the church, access information and view historical reconstructions.\n\nDuring public demonstrations, some visitors dropped the controllers. I introduced a hand-tracking mode so they could continue without holding them. This was one of the changes that came from watching people use the application.\n\nTo reduce the scene’s rendering cost, I worked on baked lighting, levels of detail and occlusion culling. The project also formed part of my thesis work."
+    },
+    "stack": [
+      "Unity",
+      "C#",
+      "Blender",
+      "XR Interaction Toolkit"
+    ],
+    "demo": "",
+    "repository": "",
+    "status": "complete",
+    "imageAlt": {
+      "en": "3D reconstruction of the Pieve di Fornovo facade",
+      "it": "Ricostruzione 3D della facciata della Pieve di Fornovo"
+    },
+    "imageHeading": {
+      "en": "PIEVE\ndi Fornovo",
+      "it": "PIEVE\ndi Fornovo"
+    },
+    "imageFit": "cover",
+    "gallery": [
       {
-        type: "text",
-        title: "Overview",
-        text:
-          "Questo progetto nasce con l'obiettivo di creare un'esperienza immersiva in realta' virtuale, pensata per valorizzare il territorio di Fornovo e guidare l'utente attraverso contenuti informativi e interattivi. \n L'applicazione e' stata sviluppata in Unity, con particolare attenzione all'ottimizzazione per dispositivi VR, garantendo un'esperienza fluida e coinvolgente. \n Il tour virtuale permette agli utenti di esplorare ambienti ricostruiti in 3D, interagire con elementi informativi e vivere un viaggio immersivo alla scoperta della storia e delle bellezze di Fornovo. \n Il progetto ha richiesto competenze in modellazione 3D, sviluppo software e design dell'esperienza utente, con un focus particolare sull'accessibilita' e l'usabilita' in ambiente VR."
+        "src": "/media/projects/pieve-interazione-vr.jpg",
+        "alt": {
+          "it": "Interazione con i contenuti informativi in realtà virtuale.",
+          "en": "Interacting with information in virtual reality."
+        },
+        "caption": {
+          "it": "Interazione con i contenuti informativi in realtà virtuale.",
+          "en": "Interacting with information in virtual reality."
+        },
+        "aspectRatio": "16 / 9"
       },
-
       {
-        type: "image",
-        src: p1Front,
-        alt: "VR Tour screenshot",
-        caption: "Vista del ambiente principale in VR"
+        "src": "/media/projects/pieve-hand-tracking.jpg",
+        "alt": {
+          "it": "Hand tracking per interagire senza controller.",
+          "en": "Hand tracking for controller-free interaction."
+        },
+        "caption": {
+          "it": "Hand tracking per interagire senza controller.",
+          "en": "Hand tracking for controller-free interaction."
+        },
+        "aspectRatio": "853 / 662"
       },
-
       {
-        type: "text",
-        title: "Interno",
-        text:
-          "L'interno e' stato modellato con cura per ricreare l'atmosfera autentica del luogo, con particolare attenzione all'illuminazione e ai dettagli architettonici. \n L'ottimizzazione per VR ha richiesto un bilanciamento tra qualità visiva e performance, implementando tecniche di LOD e occlusion culling per garantire un'esperienza fluida anche su hardware meno potente, come l'Oculus Quest 2. \n Alcuni degli elementi architettonici storici, come statue o bassorilievi, sono stati scannerizzati in 3D, ottimizzati e integrati nell'ambiente virtuale, permettendo agli utenti di avvicinarsi e interagire con essi per scoprire informazioni dettagliate sulla loro storia e significato."
+        "src": "/media/projects/pieve-interno.jpg",
+        "alt": {
+          "it": "Ricostruzione e illuminazione degli interni in Unity.",
+          "en": "Interior reconstruction and lighting in Unity."
+        },
+        "caption": {
+          "it": "Ricostruzione e illuminazione degli interni in Unity.",
+          "en": "Interior reconstruction and lighting in Unity."
+        },
+        "aspectRatio": "1185 / 803"
       },
-
       {
-        type: "image",
-        src: p1Interno,
-        alt: "Luci ambiente interno",
-        caption: "Luci ambiente interno"
+        "src": "/media/projects/pieve-esperienza-condivisa.jpg",
+        "alt": {
+          "it": "Esplorazione dello spazio virtuale con avatar.",
+          "en": "Exploring the virtual space with avatars."
+        },
+        "caption": {
+          "it": "Esplorazione dello spazio virtuale con avatar.",
+          "en": "Exploring the virtual space with avatars."
+        },
+        "aspectRatio": "1065 / 871"
       },
-
       {
-        type: "text",
-        title: "Interazione",
-        text:
-          "Particolare cura e' stata dedicata all'esperienza dell'utente, con riguardo per utenti di eta' e abilita' diverse. L'interazione e' stata progettata per essere intuitiva e accessibile, permettendo agli utenti di esplorare anche senza l'utilizzo di controller, grazie a un sistema di riconoscimento delle mani e della posizione delle dita. Permettendo dunque un'esperienza piu' naturale e immersiva, soprattutto per utenti meno esperti o con limitazioni motorie. L'interazione senza controller consente agli utenti di navigare attraverso il tour virtuale semplicemente muovendo le mani, toccando o afferrando virtualmente gli oggetti di interesse, e attivando contenuti informativi con gesti naturali. Questo approccio ha richiesto l'integrazione di tecnologie avanzate di tracking e riconoscimento dei gesti."
+        "src": "/media/projects/pieve-organo.jpg",
+        "alt": {
+          "it": "Modellazione dell'organo a confronto con il riferimento fotografico.",
+          "en": "Organ modeling alongside the photographic reference."
+        },
+        "caption": {
+          "it": "Modellazione dell'organo a confronto con il riferimento fotografico.",
+          "en": "Organ modeling alongside the photographic reference."
+        },
+        "aspectRatio": "1635 / 935"
       },
-
       {
-        type: "gallery",
-        columns: 2,
-        images: [
-          { src: p1Teleport, alt: "Teleport Mani" },
-          { src: p1Hands, alt: "Interazione utente" }
-        ],
-        caption: "Interazione senza contoller"
+        "src": "/media/projects/pieve-teletrasporto.jpg",
+        "alt": {
+          "it": "Teletrasporto tramite interazione delle mani.",
+          "en": "Teleportation using hand interaction."
+        },
+        "caption": {
+          "it": "Teletrasporto tramite interazione delle mani.",
+          "en": "Teleportation using hand interaction."
+        },
+        "aspectRatio": "863 / 731"
       },
-
-
       {
-        type: "text",
-        title: "Ricostruzione Storica",
-        text:
-          "Per offrire un esperienza unica, si permette agli utenti di tornare indietro nel tempo e vedere diverse fasi della Pieve, a seconda del periodo storico selezionato. Questo e' stato possibile grazie alla modellazione 3D basata su dati storici, fotografie d'epoca e rilievi, che ha permesso di ricostruire fedelmente l'evoluzione architettonica del sito. Gli utenti possono esplorare le diverse fasi storiche della Pieve, osservando come si e' trasformata nel corso dei secoli, e accedere a contenuti informativi che spiegano i cambiamenti architettonici e storici avvenuti nel tempo."
+        "src": "/media/projects/pieve-ambone-riferimento.jpg",
+        "alt": {
+          "it": "Ipotesi ricostruttiva dell'ambone e collocazione in pianta.",
+          "en": "Ambo reconstruction hypothesis and floor plan."
+        },
+        "caption": {
+          "it": "Ipotesi ricostruttiva dell'ambone e collocazione in pianta.",
+          "en": "Ambo reconstruction hypothesis and floor plan."
+        },
+        "aspectRatio": "1003 / 478"
       },
-
       {
-        type: "gallery",
-        columns: 3,
-        rows: 2,
-        images: [
-          { src: p1P1, alt: "Timeline 1" },
-          { src: p1P2, alt: "Timeline 2" },
-          { src: p1P3, alt: "Timeline 3" },
-          { src: p1P1a, alt: "Timeline 1" },
-          { src: p1P2b, alt: "Timeline 2" },
-          { src: p1P3c, alt: "Timeline 3" }
-        ],
-        caption: "Interazione senza contoller"
-      },
-
-      
-      {
-        type: "list",
-        title: "Tecnologie utilizzate",
-        items: [
-          "Unity",
-          "XR Interaction Toolkit",
-          "Blender",
-          "Photogrammetry",
-          "Substance Painter",
-          "Ottimizzazione per VR"
-        ]
+        "src": "/media/projects/pieve-ambone-3d.jpg",
+        "alt": {
+          "it": "Ricostruzione tridimensionale dell'ambone.",
+          "en": "Three-dimensional reconstruction of the ambo."
+        },
+        "caption": {
+          "it": "Ricostruzione tridimensionale dell'ambone.",
+          "en": "Three-dimensional reconstruction of the ambo."
+        },
+        "aspectRatio": "717 / 647"
       }
     ]
   },
-
   {
-    id: 2,
-    title: "Modellazione per 3D Printing",
-    subtitle: "Formazione e progettazione orientata alla stampa 3D",
-    cover: p2,
-    heroScale: 1.0,
-    heroMobileScale: 1.35,
-    centerImage: formellaCenter,
-    centerScale: 2.0,
-    previewVideo: formellaVideo,
-    previewImageA: formellaPreviewA,
-    previewImageB: formellaPreviewB,
-    previewTitle: "Formella 3D",
-
-    blocks: [
+    "id": "journal",
+    "number": "02",
+    "featured": true,
+    "image": "/media/projects/journal-temp.png",
+    "category": {
+      "en": "Frontend development",
+      "it": "Sviluppo frontend"
+    },
+    "title": {
+      "en": "Journal App",
+      "it": "Journal App"
+    },
+    "subtitle": {
+      "it": "Dal diario su carta a un’app che sto costruendo.",
+      "en": "From a paper journal to an app I’m building."
+    },
+    "summary": {
+      "it": "Sto sviluppando un’agenda in React per riunire diario, attività, calendario e abitudini. Un progetto personale che cresce una funzione alla volta.",
+      "en": "I’m building a React planner for journal notes, tasks, a calendar and habits. A personal project that grows one feature at a time."
+    },
+    "details": {
+      "it": "Tengo un diario su carta e sto costruendo un’app per portare parte di quell’organizzazione sul web. Il progetto comprende diario, attività, calendario e monitoraggio delle abitudini; è ancora in sviluppo.\n\nUna delle scelte è separare la data selezionata dalle informazioni salvate per quel giorno: posso spostarmi nel calendario anche dove non ho ancora scritto nulla. Ho lavorato anche sullo storico delle abitudini, con viste settimanali e mensili.\n\nMi occupo dell’interfaccia e dello sviluppo in React. Aggiungo le funzioni gradualmente, rivedendo la struttura dei componenti mentre il progetto cresce.",
+      "en": "I keep a paper journal and am building an app to bring some of that organization to the web. The project includes journal notes, tasks, a calendar and habit tracking, and is still in development.\n\nOne design choice is to keep the selected date separate from the information saved for that day, so I can browse dates without creating an entry first. I’ve also worked on habit history with weekly and monthly views.\n\nI handle the interface and React development, adding features gradually and revisiting the component structure as the project grows."
+    },
+    "stack": [
+      "React",
+      "JavaScript",
+      "CSS",
+      "UI design"
+    ],
+    "demo": "",
+    "repository": "",
+    "status": "in-progress",
+    "imageAlt": {
+      "en": "Hand-painted illustrated journal spread by Bianca Rotaru",
+      "it": "Pagine di diario illustrate e dipinte a mano da Bianca Rotaru"
+    },
+    "imageHeading": {
+      "en": "Make today\nyour own.",
+      "it": "Make today\nyour own."
+    },
+    "imagePosition": "center",
+    "gallery": []
+  },
+  {
+    "id": "portfolio",
+    "number": "03",
+    "featured": false,
+    "image": "/media/projects/portfolio.png",
+    "category": {
+      "en": "Creative frontend",
+      "it": "Frontend creativo"
+    },
+    "title": {
+      "en": "Portfolio Website",
+      "it": "Portfolio Website"
+    },
+    "subtitle": {
+      "it": "Il sito che stai visitando.",
+      "en": "The website you’re browsing."
+    },
+    "summary": {
+      "it": "Ho riunito qui sviluppo web, grafica e modellazione 3D. La colonna della prima schermata è un mio modello realizzato in Blender.",
+      "en": "A place for my web development, graphic design and 3D work. The column on the opening screen is my own Blender model."
+    },
+    "details": {
+      "it": "Ho iniziato questo portfolio per mostrare i miei lavori oltre il CV e mettere in pratica quello che stavo studiando sul frontend. Ho rivisto più volte il layout, passando dalla versione precedente a quella che stai visitando.\n\nLa colonna iniziale è un mio modello Blender, visualizzato con Three.js. Su desktop la luce segue il cursore; su telefono rimane fissa. Quando il 3D non è disponibile, viene mostrato un render statico.\n\nUna parte del lavoro è stata adattare lo scorrimento a schermi diversi: la timeline è orizzontale sui desktop con spazio sufficiente e verticale su telefono e tablet in verticale. Qui sotto trovi la versione precedente e gli schizzi del layout.",
+      "en": "I started this portfolio to show my work beyond a résumé and put my frontend studies into practice. I revised the layout several times, moving from the earlier version to the one you’re browsing.\n\nThe opening column is my own Blender model, rendered with Three.js. On desktop, a light follows the cursor; on phones, it stays fixed. A static render is shown when 3D is unavailable.\n\nPart of the work was adapting scrolling to different screens. The timeline runs horizontally on desktops with enough space, and vertically on phones and portrait tablets. Below are the previous version and layout sketches."
+    },
+    "stack": [
+      "React",
+      "Three.js",
+      "GSAP",
+      "Responsive design"
+    ],
+    "demo": "",
+    "repository": "https://github.com/biancaar/biancaar.github.io",
+    "status": "complete",
+    "imageAlt": {
+      "en": "Bianca Rotaru portfolio homepage",
+      "it": "Homepage del portfolio di Bianca Rotaru"
+    },
+    "imageFit": "cover",
+    "gallery": [
       {
-        type: "text",
-        title: "Overview",
-        text:
-          "Attivita' di insegnamento e progettazione focalizzata sulla modellazione 3D funzionale alla stampa, con attenzione a tolleranze, volumi e ottimizzazione delle mesh. Corso insegnato ai studenti del corso di Ambiente e Territorio presso la scuola Toschi di Parma. L'obbiettivo del progetto e'stato quello di fornire agli studenti le competenze necessarie per creare modelli 3D usando gli insegnamenti di architettura e storytelling, al fine di ottenere un prodotto finale da proporre al pubblico."
+        "src": "/media/projects/old-portfolio.png",
+        "alt": {
+          "it": "Aspetto della hero del layout vecchio",
+          "en": "Look of the old hero page"
+        },
+        "caption": {
+          "it": "Aspetto della hero del layout vecchio",
+          "en": "Look of the old hero page"
+        },
+        "aspectRatio": "1003 / 478"
       },
-
       {
-        type: "image",
-        src: p2,
-        alt: "Modello 3D pronto per la stampa",
-        caption: "Anteprima del modello in Blender"
+        "src": "/media/projects/old-timeline.png",
+        "alt": {
+          "it": "Aspetto della timeline vecchia",
+          "en": "Look of the old timeline"
+        },
+        "caption": {
+          "it": "Aspetto della timeline vecchia",
+          "en": "Look of the old timeline"
+        },
+        "aspectRatio": "1003 / 478"
       },
-
       {
-        type: "image",
-        src: p2Progetto,
-        alt: "Progetto iniziale",
-        caption: "Progetto iniziale"
-      },
-
-      {
-        type: "image",
-        src: p2Risultato,
-        alt: "Risultato stampa 3D",
-        caption: "Risultato finale dopo stampa 3D"
-      },
-
-      {
-        type: "list",
-        title: "Competenze",
-        items: ["Blender", "Insegnamento", "3D Printing Workflow"]
+        "src": "/media/projects/wireframe-low-fid.png",
+        "alt": {
+          "it": "Wireframe low fidelity scelto",
+          "en": "Wireframe low fidelity picked"
+        },
+        "caption": {
+          "it": "Wireframe low fidelity scelto",
+          "en": "Wireframe low fidelity picked"
+        },
+        "aspectRatio": "724 / 2172"
       }
     ]
   },
-
   {
-    id: 3,
-    title: "Ottimizzazione Modelli 3D",
-    subtitle: "Riduzione della complessita' per applicazioni real-time",
-    cover: p3,
-    heroScale: 2.1,
-    centerImage: render3Center,
-    centerScale: 3.8,
-    previewVideo: optimizationVideo,
-    previewImageA: columnHDPreview,
-    previewImageB: columnLDPreview,
-    previewTitle: "Baking Texture PBR",
-
-    blocks: [
+    "id": "column",
+    "number": "04",
+    "featured": false,
+    "image": null,
+    "category": {
+      "en": "3D technical art",
+      "it": "Arte tecnica 3D"
+    },
+    "title": {
+      "en": "3D Optimization",
+      "it": "Ottimizzazione 3D"
+    },
+    "subtitle": {
+      "it": "Dallo stesso modello, due livelli di dettaglio.",
+      "en": "One model, two levels of detail."
+    },
+    "summary": {
+      "it": "Ho modellato questa colonna in Blender e ne ho preparato una versione più leggera, trasferendo i dettagli nelle texture con Substance Painter.",
+      "en": "I modeled this column in Blender and made a lighter version, transferring surface detail to textures with Substance Painter."
+    },
+    "details": {
+      "it": "Sono partita da una colonna ad alto dettaglio modellata in Blender. Per usarla in una scena interattiva ho preparato una mesh con meno poligoni, curato le UV e trasferito i dettagli nelle texture tramite baking in Substance Painter.\n\nLe due immagini mostrano il modello con materiali e la struttura della mesh ottimizzata. Il lavoro consiste nel decidere quali forme mantenere nella geometria e quali dettagli affidare alle texture.\n\nÈ anche la colonna che ho scelto per la prima schermata di questo portfolio.",
+      "en": "I started with a detailed column modeled in Blender. To use it in an interactive scene, I prepared a lower-poly mesh, worked on its UVs and baked surface details into textures with Substance Painter.\n\nThe two images show the textured model and the optimized mesh structure. The work involves deciding which shapes need geometry and which details can be carried by textures.\n\nThis is also the column I chose for the opening screen of this portfolio."
+    },
+    "stack": [
+      "Blender",
+      "Substance Painter",
+      "PBR",
+      "GLB"
+    ],
+    "demo": "",
+    "repository": "",
+    "status": "complete",
+    "images": [
       {
-        type: "text",
-        title: "Overview",
-        text:
-          "Progetto personale incentrato sulla modellazione ad alta definizione di una colonna corinzia, realizzata con elevata densità di vertici per preservare ogni dettaglio ornamentale. Successivamente, tramite Substance Painter, sono stati generati materiali PBR a partire dal modello high-poly, al fine di trasferire i dettagli su una versione low-poly ottimizzata. Questo workflow ha permesso di mantenere un’elevata qualità visiva migliorando significativamente le performance, rendendo il modello adatto a contesti real-time e web. Nelle immagini sotto vediamo lo stesso modello. Le texture applicate al semplice cilindro, permettono di ricreare la tridimensionalita'."
+        "src": "/media/projects/column-hd.jpg",
+        "label": {
+          "en": "HIGH DETAIL",
+          "it": "ALTO DETTAGLIO"
+        },
+        "alt": {
+          "en": "High-detail fluted column with textured materials",
+          "it": "Colonna scanalata ad alto dettaglio con materiali e texture"
+        }
       },
-
       {
-        type: "gallery",
-        columns: 2,
-        images: [
-          { src: p3HD1, alt: "High Poly Texture" },
-          { src: p3LD1, alt: "Low Poly Mesh" },
-          { src: p3Mod, alt: "Modular Assets" },
-          { src: p3Full, alt: "Complete Look" }
-        ],
-        caption: "HD Texture, LD Mesh e modello modularizzato"
-      },
-
-
-      {
-        type: "list",
-        title: "Tecniche applicate",
-        items: [
-          "Modellazione High-Poly",
-          "Ottimizzazione Low-Poly",
-          "Baking & Texture Workflow (PBR)",
-          "Creazione modular assets",
-          "Ottimizzazione per Real-Time / Web"
-        ]
+        "src": "/media/projects/column-ld.jpg",
+        "label": {
+          "en": "LOW POLY MESH",
+          "it": "MESH LOW POLY"
+        },
+        "alt": {
+          "en": "Optimized column geometry",
+          "it": "Geometria ottimizzata della colonna"
+        }
       }
-    ]
+    ],
+    "gallery": []
   }
 ];
-
-const projectTranslations = {
-  en: {
-    1: {
-      subtitle: "Interactive virtual reality application",
-      previewTitle: "Fornovo Parish Church",
-      blocks: [
-        {
-          title: "Overview",
-          text:
-            "This project was created to build an immersive virtual reality experience designed to showcase the Fornovo area and guide users through informative and interactive content. The application was developed in Unity with a strong focus on VR optimization to ensure a smooth and engaging experience. The virtual tour allows users to explore reconstructed 3D environments, interact with informative elements, and discover the history and cultural heritage of Fornovo. The project required skills in 3D modeling, software development and user experience design, with special attention to accessibility and usability in VR."
-        },
-        {
-          caption: "Main VR environment view"
-        },
-        {
-          title: "Interior",
-          text:
-            "The interior was modeled carefully to recreate the authentic atmosphere of the site, with attention to lighting and architectural details. VR optimization required balancing visual quality and performance by implementing LOD and occlusion culling techniques to maintain fluid performance even on less powerful hardware such as Oculus Quest 2. Some historical architectural elements, including statues and reliefs, were scanned in 3D, optimized and integrated in the virtual environment, allowing users to get close and interact with them to discover detailed information about their history and meaning."
-        },
-        {
-          caption: "Interior lighting"
-        },
-        {
-          title: "Interaction",
-          text:
-            "Special care was dedicated to user experience, with attention to users of different ages and abilities. Interaction was designed to be intuitive and accessible, allowing exploration even without controllers thanks to hand and finger tracking. This creates a more natural and immersive experience, especially for less experienced users or users with motor limitations. Controller-free interaction lets users navigate the virtual tour by moving their hands, virtually touching or grabbing points of interest, and triggering informative content through natural gestures. This approach required integrating advanced tracking and gesture-recognition technologies."
-        },
-        {
-          caption: "Controller-free interaction"
-        },
-        {
-          title: "Historical Reconstruction",
-          text:
-            "To offer a unique experience, users can travel back in time and view different phases of the church according to the selected historical period. This was possible through 3D modeling based on historical data, archive photos and surveys, which made it possible to faithfully reconstruct the architectural evolution of the site. Users can explore the different historical phases and access informative content explaining the architectural and historical changes across centuries."
-        },
-        {
-          caption: "Historical timeline interaction"
-        },
-        {
-          title: "Technologies Used",
-          items: [
-            "Unity",
-            "XR Interaction Toolkit",
-            "Blender",
-            "Photogrammetry",
-            "Substance Painter",
-            "VR optimization"
-          ]
-        }
-      ]
-    },
-    2: {
-      title: "3D Printing Modeling",
-      subtitle: "Training and design focused on additive manufacturing",
-      previewTitle: "3D Plaque",
-      blocks: [
-        {
-          title: "Overview",
-          text:
-            "Teaching and design activity focused on 3D modeling for print production, with attention to tolerances, volumes and mesh optimization. The course was taught to students in the Environment and Territory program at Toschi school in Parma. The goal was to provide students with the skills to create 3D models by combining architecture and storytelling methods, producing a final output ready to be presented to the public."
-        },
-        {
-          caption: "Model preview in Blender"
-        },
-        {
-          caption: "Initial project concept"
-        },
-        {
-          caption: "Final result after 3D printing"
-        },
-        {
-          title: "Skills",
-          items: ["Blender", "Teaching", "3D Printing Workflow"]
-        }
-      ]
-    },
-    3: {
-      title: "3D Model Optimization",
-      subtitle: "Complexity reduction for real-time applications",
-      previewTitle: "PBR Texture Baking",
-      blocks: [
-        {
-          title: "Overview",
-          text:
-            "Personal project focused on high-definition modeling of a Corinthian column, created with a dense vertex count to preserve ornamental detail. Then, using Substance Painter, PBR materials were generated from the high-poly model to transfer details onto an optimized low-poly version. This workflow preserved visual quality while significantly improving performance, making the model suitable for real-time and web contexts. The images below show the same model: textures applied on a simple cylinder recreate the perception of depth and detail."
-        },
-        {
-          caption: "HD texture, LD mesh and modular model"
-        },
-        {
-          title: "Applied Techniques",
-          items: [
-            "High-poly modeling",
-            "Low-poly optimization",
-            "Baking and PBR texture workflow",
-            "Modular asset creation",
-            "Real-time and web optimization"
-          ]
-        }
-      ]
-    }
-  }
-};
-
-const mergeBlockTranslation = (block, translatedBlock) => {
-  if (!translatedBlock) return block;
-  return { ...block, ...translatedBlock };
-};
-
-const buildLocalizedProjects = (language) => {
-  if (language === "it") return projectsIt;
-
-  const source = projectTranslations[language];
-  if (!source) return projectsIt;
-
-  return projectsIt.map((project) => {
-    const translated = source[project.id];
-    if (!translated) return project;
-
-    const localizedBlocks = project.blocks.map((block, index) =>
-      mergeBlockTranslation(block, translated.blocks?.[index])
-    );
-
-    return {
-      ...project,
-      ...translated,
-      blocks: localizedBlocks
-    };
-  });
-};
-
-const projectsByLanguage = {
-  it: projectsIt,
-  en: buildLocalizedProjects("en")
-};
-
-export const getProjects = (language = "it") =>
-  projectsByLanguage[language] || projectsByLanguage.it;
-
-const projects = projectsByLanguage.it;
-
-export default projects;

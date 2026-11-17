@@ -1,0 +1,36 @@
+/* Contact delivery states and the standalone confirmation view. */
+.contact-form fieldset { border: 0; padding: 0; margin: 0; min-width: 0; display: grid; gap: 18px; }
+.contact-form fieldset:disabled { opacity: .65; }
+.contact-form button:disabled { cursor: wait; }
+.contact-form-status { margin: 0; font-size: 14px; line-height: 1.6; }
+.contact-form-status:empty { display: none; }
+.thank-page {
+  padding-top: 76px;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  color: var(--cream);
+  background: radial-gradient(ellipse at 85% 40%, #743c2c40, transparent 58%), var(--ink);
+}
+.thank-footer { display: flex; justify-content: space-between; align-items: center; gap: 24px; padding: 30px clamp(24px, 6.5vw, 112px); }
+.thank-content { flex: 1; width: min(1200px, 100%); margin: auto; padding: clamp(65px, 10vh, 130px) clamp(24px, 6.5vw, 112px); }
+.thank-symbol { width: 62px; height: 62px; display: grid; place-items: center; border: 1px solid var(--rust); border-radius: 50%; color: var(--rust); margin-bottom: 28px; }
+.thank-content .eyebrow { color: var(--rust); }
+.thank-content h1 { font-size: clamp(55px, 8vw, 112px); line-height: 1; margin: 22px 0 30px; }
+.thank-content h1:focus { outline: none; }
+.thank-content h1 em { color: #d7bba4; }
+.thank-description { max-width: 490px; font-size: clamp(16px, 1.5vw, 19px); line-height: 1.8; color: var(--muted); }
+.thank-back { display: inline-flex; align-items: center; gap: 14px; background: var(--cream); color: var(--ink); padding: 18px 24px; margin: 26px 24px 12px 0; font-size: 14px; }
+.thank-back:hover { background: #d7bba4; }
+.thank-projects { display: inline-flex; align-items: center; gap: 10px; font-size: 13px; border-bottom: 1px solid var(--rust); padding: 10px 0; }
+.thank-footer { border-top: 1px solid #f0e7dc20; color: var(--muted); font-size: 11px; line-height: 1.6; }
+@media (max-width: 1099px), (max-aspect-ratio: 1/1) {
+  .thank-page { padding-top: 66px; }
+}
+@media (max-width: 650px) {
+  .thank-content { text-align: center; }
+  .thank-symbol { margin-inline: auto; }
+  .thank-back { display: flex; justify-content: center; margin-right: 0; }
+  .thank-description { margin-inline: auto; }
+  .thank-footer { flex-direction: column; text-align: center; gap: 8px; }
+}

@@ -1,69 +1,69 @@
-const timelineByLanguage = {
-  it: [
-    {
-      period: "2017",
-      title: "Diploma Tecnico in Informatica e Telecomunicazioni",
-      description:
-        "Percorso tecnico con base solida su sviluppo software, sistemi informatici e networking."
+// Editable portfolio content. Keep both en/it translations in sync.
+export const timeline = [
+  {
+    "year": "2026",
+    "title": {
+      "en": "Frontend specialization",
+      "it": "Specializzazione frontend"
     },
-    {
-      period: "2017",
-      title: "First Certificate in English",
-      description: "Cambridge English Language Assessment."
-    },
-    {
-      period: "Mag 2023 - Lug 2025",
-      title: "Programmatore Informatico",
-      description:
-        "Infinitodesign SRL (Parma): sopralluoghi fotografici e scan 3D, coordinamento progetto su GitHub, sviluppo funzionalità, modellazione 3D, tutorial utente e test visori VR."
-    },
-    {
-      period: "2025",
-      title: "Laurea Triennale in INFORMATICA",
-      description:
-        "Università degli Studi di Parma: approfondimento su programmazione, algoritmi, sistemi operativi, database, intelligenza artificiale e sviluppo software."
-    },
-    {
-      period: "2025",
-      title: "Meta Front-End Developer Specialization",
-      description: "Specializzazione completata su Coursera."
+    "text": {
+      "en": "Meta frontend coursework and independent React applications.",
+      "it": "Formazione Meta per il frontend e applicazioni React personali."
     }
-  ],
-  en: [
-    {
-      period: "2017",
-      title: "Technical Diploma in IT and Telecommunications",
-      description:
-        "Technical program with a solid foundation in software development, information systems and networking."
+  },
+  {
+    "year": "2025",
+    "title": {
+      "en": "Computer Science degree",
+      "it": "Laurea in Informatica"
     },
-    {
-      period: "2017",
-      title: "First Certificate in English",
-      description: "Cambridge English Language Assessment."
-    },
-    {
-      period: "May 2023 - Jul 2025",
-      title: "Software Developer",
-      description:
-        "Infinitodesign SRL (Parma): photo surveys and 3D scans, project coordination on GitHub, feature development, 3D modeling, user tutorials and VR headset testing."
-    },
-    {
-      period: "2025",
-      title: "Bachelor's Degree in Computer Science",
-      description:
-        "University of Parma: focused studies on programming, algorithms, operating systems, databases, artificial intelligence and software development."
-    },
-    {
-      period: "2025",
-      title: "Meta Front-End Developer Specialization",
-      description: "Specialization completed on Coursera."
+    "text": {
+      "en": "Bachelor's degree · University of Parma.",
+      "it": "Laurea triennale · Università di Parma."
     }
-  ]
-};
-
-export const getTimeline = (language = "it") =>
-  [...(timelineByLanguage[language] || timelineByLanguage.it)].reverse();
-
-const timeline = [...timelineByLanguage.it].reverse();
-
-export default timeline;
+  },
+  {
+    "year": "2023—25",
+    "title": {
+      "en": "Software Developer",
+      "it": "Programmatrice informatica"
+    },
+    "text": {
+      "en": "Infinitodesign · VR development, interaction design, 3D optimization and teaching.",
+      "it": "Infinitodesign · sviluppo VR, interaction design, ottimizzazione 3D e docenza."
+    }
+  },
+  {
+    "year": "2017",
+    "title": {
+      "en": "IT & Telecommunications diploma",
+      "it": "Diploma in Informatica e Telecomunicazioni"
+    },
+    "text": {
+      "en": "Technical foundation in programming and computer systems.",
+      "it": "Fondamenti tecnici di programmazione e sistemi informatici."
+    }
+  },
+  {
+    "year": "2016",
+    "title": {
+      "en": "Graphic Designer",
+      "it": "Designer Grafico"
+    },
+    "text": {
+      "en": "Created and designed posters for school competitions and graphic content for marketing material for events.",
+      "it": "Creato e disegnato locandine per bandi scolastici e contenuti grafici per materiale di marketing per eventi."
+    }
+  },
+  {
+    "year": "2014",
+    "title": {
+      "en": "Freelance Web Graphic Designer",
+      "it": "Designer Grafico Web Freelance"
+    },
+    "text": {
+      "en": "Graphic content creation, for websites, for over 100 clients.",
+      "it": "Creazione di contenuti grafici, per siti web, per più di 100 clienti."
+    }
+  }
+];
